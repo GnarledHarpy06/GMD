@@ -7,11 +7,11 @@
   IgnorableNamespaces="uap mp">
 
   <Identity
-    Name="819fc1d8-45ec-4451-9ced-aabd9d73f2fe"
+    Name="bbab8a9e-fbc2-49ac-b542-24cce8527b60"
     Publisher="CN=Giovan"
     Version="1.0.0.0" />
 
-  <mp:PhoneIdentity PhoneProductId="819fc1d8-45ec-4451-9ced-aabd9d73f2fe" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+  <mp:PhoneIdentity PhoneProductId="bbab8a9e-fbc2-49ac-b542-24cce8527b60" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
     <DisplayName>GMD</DisplayName>
