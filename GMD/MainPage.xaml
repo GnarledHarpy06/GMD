@@ -22,22 +22,17 @@
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <SplitView x:Name="HamburgerSplitView"
-                   Style="{StaticResource SplitViewStyle}">
+                   DisplayMode="CompactInline"
+                   CompactPaneLength="48">
             <SplitView.Pane>
-                <Grid Background="{StaticResource SplitViewBackgroundBrush}">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition />
-                    </Grid.RowDefinitions>
-                    
+                <RelativePanel Background="{StaticResource SplitViewBackgroundBrush}">
                     <TextBlock x:Name="MenuHeader"
-                               Grid.Row="0"
+                               RelativePanel.AlignTopWithPanel="True"
                                FontSize="24"
                                FontFamily="Segoe UI"
                                Text="GMD"
                                Margin="56,8,0,8"/>
-                    <StackPanel Grid.Row="1">
+                    <StackPanel RelativePanel.Below="MenuHeader">
                         <RadioButton Style="{StaticResource SplitViewRadioButtonStyle}"
                                      Command="{Binding NavCommand}"
                                      IsChecked="True"
@@ -86,37 +81,10 @@
                                 <TextBlock Style="{StaticResource SplitViewTextBlockStyle}"
                                            Text="&#xE82D;" />
                             </RadioButton.Tag>
-                        </RadioButton>                        
-                    </StackPanel>
-                    <StackPanel Grid.Row="2"
-                                VerticalAlignment="Bottom">
-                        <RadioButton Style="{StaticResource SplitViewRadioButtonStyle}"
-                                     Command="{Binding NavCommand}"
-                                     Content="Settings"
-                                     GroupName="Nav">
-                            <RadioButton.CommandParameter>
-                                <local:NavType Type="views:SettingsPage" />
-                            </RadioButton.CommandParameter>
-                            <RadioButton.Tag>
-                                <TextBlock Style="{StaticResource SplitViewTextBlockStyle}"
-                                           Text="&#xE115;" />
-                            </RadioButton.Tag>
-                        </RadioButton>
-                        <RadioButton Style="{StaticResource SplitViewRadioButtonStyle}"
-                                     Command="{Binding NavCommand}"
-                                     Content="About"
-                                     GroupName="Nav">
-                            <RadioButton.CommandParameter>
-                                <local:NavType Type="views:AboutPage" />
-                            </RadioButton.CommandParameter>
-                            <RadioButton.Tag>
-                                <TextBlock Style="{StaticResource SplitViewTextBlockStyle}"
-                                           Text="&#xE783;" />
-                            </RadioButton.Tag>
                         </RadioButton>
                     </StackPanel>
 
-                </Grid>
+                </RelativePanel>
             </SplitView.Pane>
             <SplitView.Content>
                 <Frame x:Name="MenuFrame" 
@@ -126,10 +94,10 @@
         <Button x:Name="HamburgerMenuButton"
                 VerticalAlignment="Top"
                 Click="HamburgerMenuButton_Click"
-                Width="48"
-                Height="48"
+                Width="44"
+                Height="44"
                 Content="&#xE700;"
-                FontSize="21.333"
+                FontSize="20"
                 FontFamily="Segoe MDL2 Assets">
         </Button>
     </Grid>

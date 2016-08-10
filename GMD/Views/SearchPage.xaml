@@ -8,20 +8,16 @@
     mc:Ignorable="d"
     NavigationCacheMode="Required">
 
-    <Page.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Styles/SimpleTextHierarchyStyles.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </Page.Resources>
-    
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <StackPanel>
             <TextBlock Text="History Page"
-                       Style="{StaticResource HeaderText}" />
+                       FontSize="48"
+                       Margin="8"
+                       FontWeight="ExtraLight" />            
             <TextBlock Text="Search Page"
-                       Style="{StaticResource HeaderText}" />            
+                       FontSize="48"
+                       Margin="8"
+                       FontWeight="ExtraLight" />
         </StackPanel>
 
     </Grid>
