@@ -82,6 +82,30 @@
                                            Text="&#xE82D;" />
                             </RadioButton.Tag>
                         </RadioButton>
+                        <RadioButton Style="{StaticResource SplitViewRadioButtonStyle}"
+                                     Command="{Binding NavCommand}"
+                                     Content="Settings"
+                                     GroupName="Nav">
+                            <RadioButton.CommandParameter>
+                                <local:NavType Type="views:SettingsPage" />
+                            </RadioButton.CommandParameter>
+                            <RadioButton.Tag>
+                                <TextBlock Style="{StaticResource SplitViewTextBlockStyle}"
+                                           Text="&#xE115;" />
+                            </RadioButton.Tag>
+                        </RadioButton>
+                        <RadioButton Style="{StaticResource SplitViewRadioButtonStyle}"                                     
+                                     Command="{Binding NavCommand}"
+                                     Content="About"
+                                     GroupName="Nav">
+                            <RadioButton.CommandParameter>
+                                <local:NavType Type="views:AboutPage" />
+                            </RadioButton.CommandParameter>
+                            <RadioButton.Tag>
+                                <TextBlock Style="{StaticResource SplitViewTextBlockStyle}"
+                                           Text="&#xE783;" />
+                            </RadioButton.Tag>
+                        </RadioButton>
                     </StackPanel>
 
                 </RelativePanel>
@@ -94,8 +118,8 @@
         <Button x:Name="HamburgerMenuButton"
                 VerticalAlignment="Top"
                 Click="HamburgerMenuButton_Click"
-                Width="44"
-                Height="44"
+                Width="48"
+                Height="48"
                 Content="&#xE700;"
                 FontSize="20"
                 FontFamily="Segoe MDL2 Assets">
