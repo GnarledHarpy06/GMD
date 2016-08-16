@@ -14,7 +14,6 @@
                 <ResourceDictionary Source="/Styles/HamburgerSplitViewStyles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
-            <Style TargetType="TextBlock" BasedOn="{StaticResource SplitViewTextBlockStyle}" />
             <Style TargetType="RadioButton" BasedOn="{StaticResource SplitViewRadioButtonStyle}" />
 
         </ResourceDictionary>
@@ -22,7 +21,7 @@
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <SplitView x:Name="HamburgerSplitView"
-                   DisplayMode="CompactInline"
+                   DisplayMode="CompactOverlay"
                    CompactPaneLength="48">
             <SplitView.Pane>
                 <RelativePanel Background="{StaticResource SplitViewBackgroundBrush}">
@@ -81,7 +80,9 @@
                                 <TextBlock Style="{StaticResource SplitViewTextBlockStyle}"
                                            Text="&#xE82D;" />
                             </RadioButton.Tag>
-                        </RadioButton>
+                        </RadioButton>                        
+                    </StackPanel>
+                    <StackPanel RelativePanel.AlignBottomWithPanel="True">
                         <RadioButton Style="{StaticResource SplitViewRadioButtonStyle}"
                                      Command="{Binding NavCommand}"
                                      Content="Settings"
