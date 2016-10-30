@@ -21,4 +21,11 @@
                    Style="{StaticResource HeaderText}"/>
 
     </Grid>
+    <Page.BottomAppBar>
+        <CommandBar>
+            <AppBarButton Name="AddDict"
+                          Icon="Add"
+                          Label="Add Dictionary" />
+        </CommandBar>
+    </Page.BottomAppBar>
 </Page>
