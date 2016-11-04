@@ -11,10 +11,10 @@ namespace GMD.ViewModels
 {
     class Dict
     {
-        [PrimaryKey, AutoIncrement]
+        [PrimaryKey, AutoIncrement, Unique]
         private int dictID { get; set; }
-        [MaxLength(64)]
-        public string FileName { get; private set; }
+        [Unique]
+        public string FolderName { get; private set; }
         public string Directory { get; private set; }
 
         public string BookName { get; private set; }
@@ -42,13 +42,13 @@ namespace GMD.ViewModels
         // private string ifoCltPath { get; set; } // unsupported
         // private string synCltPath { get; set; } // unsupported
 
-        private Dict() { }
+        public Dict() { }
 
-        private Dict(string fileName)
+        public Dict(string fileName)
         {
-            FileName = fileName;
+            FolderName = fileName;
             Directory = Path.Combine
-                (ApplicationData.Current.LocalFolder.Path, FileName);
+                (ApplicationData.Current.LocalFolder.Path, FolderName);
         }
 
         public async void BuildDictionaryAsync()
@@ -110,7 +110,7 @@ namespace GMD.ViewModels
                 WordCount = int.Parse(getStringValue(lines, "wordcount"));
                 IdxFileSize = int.Parse(getStringValue(lines, "idxfilesize"));
             }
-            catch { BookName = FileName; }
+            catch { BookName = FolderName; }
 
             try { idxOffsetBits = byte.Parse(getStringValue(lines, "idxoffsetbits")); }
             catch { }
@@ -178,4 +178,16 @@ namespace GMD.ViewModels
             }
         }
     }
+
+    //public class Lemma
+    //{
+    //    [PrimaryKey, AutoIncrement]
+    //    private int lemmaId { get; set; }
+        
+    //    private int dictId { get; set; }
+    //    public string wordStr { get; set; }
+    //    public string wordDataOft { get; set; }
+    //    public string wordDataSize { get; set; }
+
+    //}
 }

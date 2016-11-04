@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using GMD.ViewModels;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Pickers;
@@ -19,13 +20,13 @@ namespace GMD.ViewModels
         private static string path = Path.Combine
             (ApplicationData.Current.LocalFolder.Path, "Dicts_db.sqlite");
 
-        private SQLiteConnection connection = ManageDicts.GetDatabaseConnection();
+        private static SQLiteConnection connection = ManageDicts.GetDatabaseConnection();
 
         private static SQLiteConnection GetDatabaseConnection()
         {
             SQLiteConnection _connection;
 
-            if (!System.IO.File.Exists(path))
+            if (!File.Exists(path))
             {
                 _connection = new SQLiteConnection
                     (new SQLite.Net.Platform.WinRT.SQLitePlatformWinRT(), path);
@@ -40,7 +41,7 @@ namespace GMD.ViewModels
             return _connection;
         }
 
-        private async Task<StorageFile> selectAFileAsync()
+        private static async Task<StorageFile> selectAFileAsync()
         {
             FileOpenPicker openPicker = new FileOpenPicker();
             openPicker.ViewMode = PickerViewMode.List;
@@ -59,14 +60,16 @@ namespace GMD.ViewModels
             }
         }
 
-        async void AddDict()
+        public static async void AddDict()
         {
             StorageFile file = await selectAFileAsync();
-
+            string extractionFolder;
             
             using (Stream stream = await file.OpenStreamForReadAsync())
             using (var reader = ReaderFactory.Open(stream))
             {
+                extractionFolder = file.DisplayName;
+
                 while (reader.MoveToNextEntry())
                 {
                     if (!reader.Entry.IsDirectory)
@@ -79,6 +82,11 @@ namespace GMD.ViewModels
                     }
                 }
             }
+
+            Dict newDict = new Dict(extractionFolder);
+            newDict.BuildDictionaryAsync();
+
+            connection.Insert(newDict);
         }
     }    
 }
