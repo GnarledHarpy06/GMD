@@ -3,17 +3,18 @@ using SharpCompress.Common;
 using SharpCompress.Readers;
 using SharpCompress.Writers;
 using SQLite.Net;
+using SQLite.Net.Platform.WinRT;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using GMD.ViewModels;
+using GMD.Models;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 
-namespace GMD.ViewModels
+namespace GMD.Models
 {
     public class ManageDicts
     {
@@ -29,13 +30,13 @@ namespace GMD.ViewModels
             if (!File.Exists(path))
             {
                 _connection = new SQLiteConnection
-                    (new SQLite.Net.Platform.WinRT.SQLitePlatformWinRT(), path);
+                    (new SQLitePlatformWinRT(), path);
                 _connection.CreateTable<Dict>();
             }
             else
             {
                 _connection = new SQLiteConnection
-                    (new SQLite.Net.Platform.WinRT.SQLitePlatformWinRT(), path);                
+                    (new SQLite.Net.Platform.WinRT.SQLitePlatformWinRT(), path);
             }
 
             return _connection;
@@ -60,33 +61,40 @@ namespace GMD.ViewModels
             }
         }
 
-        public static async void AddDict()
+        public static async void AddDictAsync()
         {
             StorageFile file = await selectAFileAsync();
             string extractionFolder;
-            
-            using (Stream stream = await file.OpenStreamForReadAsync())
-            using (var reader = ReaderFactory.Open(stream))
-            {
-                extractionFolder = file.DisplayName;
 
-                while (reader.MoveToNextEntry())
+            try
+            {
+                using (Stream stream = await file.OpenStreamForReadAsync())
+                using (var reader = ReaderFactory.Open(stream))
                 {
-                    if (!reader.Entry.IsDirectory)
+                    var fileName = file.DisplayName;
+                    extractionFolder = fileName.Remove(fileName.LastIndexOf("."),
+                        fileName.Length - fileName.LastIndexOf("."));
+
+                    while (reader.MoveToNextEntry())
                     {
-                        reader.WriteEntryToDirectory(ApplicationData.Current.LocalFolder.Path, new ExtractionOptions()
+                        if (!reader.Entry.IsDirectory)
                         {
-                            ExtractFullPath = true,
-                            Overwrite = true
-                        });
+                            reader.WriteEntryToDirectory(ApplicationData.Current.LocalFolder.Path, new ExtractionOptions()
+                            {
+                                ExtractFullPath = true,
+                                Overwrite = true
+                            });
+                        }
                     }
                 }
+
+                Dict newDict = new Dict(extractionFolder);
+                newDict.BuildDictionaryAsync();
+
+                connection.Insert(newDict);
             }
+            finally { }
 
-            Dict newDict = new Dict(extractionFolder);
-            newDict.BuildDictionaryAsync();
-
-            connection.Insert(newDict);
         }
-    }    
+    }
 }

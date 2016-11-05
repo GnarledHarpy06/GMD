@@ -1,5 +1,4 @@
-﻿using SharpCompress.Readers;
-using SQLite.Net.Attributes;
+﻿using SQLite.Net.Attributes;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -7,7 +6,11 @@ using System.Linq;
 using System.Text;
 using Windows.Storage;
 
-namespace GMD.ViewModels
+using SharpCompress.Archives;
+using SharpCompress.Archives.GZip;
+using System.Threading.Tasks;
+
+namespace GMD.Models
 {
     class Dict
     {
@@ -44,11 +47,14 @@ namespace GMD.ViewModels
 
         public Dict() { }
 
-        public Dict(string fileName)
+        public Dict(string extractionFolder)
         {
-            FolderName = fileName;
+            FolderName = extractionFolder;
             Directory = Path.Combine
                 (ApplicationData.Current.LocalFolder.Path, FolderName);
+#if DEBUG
+            System.Diagnostics.Debug.WriteLine(Directory);
+#endif
         }
 
         public async void BuildDictionaryAsync()
@@ -64,24 +70,27 @@ namespace GMD.ViewModels
             finally { }
 
             try
-            { dictPath = getPathByFileType(".dict"); }
-            catch
             {
-                try
-                { extract("dict.dz"); }
-                catch { extract("dict.gz"); }
-
                 dictPath = getPathByFileType(".dict");
+
+                if (String.IsNullOrEmpty(dictPath))
+                {
+                    dictPath = await extractAsync(".dict.dz");
+                }
+
             }
+            catch { }
 
             try
-            { idxPath = getPathByFileType(".idx"); }
-            catch
             {
-                extract("idx.gz");
-
                 idxPath = getPathByFileType(".idx");
+
+                if (String.IsNullOrEmpty(idxPath))
+                {
+                    idxPath = await extractAsync(".idx.dz");
+                }
             }
+            catch { }
 
             List<String> lines;
 
@@ -94,7 +103,7 @@ namespace GMD.ViewModels
                 byte[] _byteBuffer = memStream.ToArray();
                 string ifo = Encoding.UTF8.GetString(_byteBuffer, 0, _byteBuffer.Length);
                 lines = ifo.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries).ToList();
-                
+
                 /*  This code reads data from .ifo file as a stream
                  *  copys them to a memory stream
                  *  turns them into byteArray
@@ -142,40 +151,43 @@ namespace GMD.ViewModels
 
         private static string getStringValue(List<string> lines, string valueType)
         {
-            return lines.Select(line => line.Contains($"{valueType}=") ?
-                    line.Remove(0, line.Length - $"{valueType}=".Length) : null)
-                    .ToString();
+
+            string line = lines.Where(p => p.Contains($"{valueType}=")).FirstOrDefault();
+            return line.Remove(0, $"{valueType}=".Length);
         }
 
         private string getPathByFileType(string extension)
         {
-            var files = System.IO.Directory.EnumerateFiles(Directory, extension, SearchOption.TopDirectoryOnly);
+            var files = System.IO.Directory.EnumerateFiles(Directory, "*" + extension, SearchOption.TopDirectoryOnly);
 
             foreach (string currentFile in files)
             {
-                string _fileName = currentFile.Remove(0, currentFile.Length - extension.Length);
-                if (_fileName == extension)
+                string _extension = currentFile.Remove(0, currentFile.Length - extension.Length);
+                if (_extension == extension)
                 {
-                    return _fileName;
+                    return currentFile;
                 }
             }
             return null;
         }
-        
-        private async void extract(string extension)
+
+        private async Task<String> extractAsync(string extension)
         {
             string path = getPathByFileType(extension);
-            StorageFile file = await StorageFile.GetFileFromPathAsync(path);
-
-            using (Stream stream = await file.OpenStreamForReadAsync())
-            using (var reader = ReaderFactory.Open(stream))
+            string primaryExtension = extension.Remove(0, extension.LastIndexOf("."));
+            string writePath = path.Replace(
+                    extension,
+                    extension.Remove(extension.IndexOf(primaryExtension),
+                    extension.Length - extension.IndexOf(primaryExtension)));
+            
+            using (Stream stream = await (await StorageFile.GetFileFromPathAsync(path)).OpenStreamForReadAsync())
+            using (var archive = GZipArchive.Open(stream))
             {
-                reader.WriteEntryToDirectory(Directory, new ExtractionOptions()
-                {
-                    ExtractFullPath = true,
-                    Overwrite = true
-                });
+                var entry = archive.Entries.First();
+                entry.WriteToFile(writePath);
             }
+
+            return writePath;
         }
     }
 
@@ -183,7 +195,7 @@ namespace GMD.ViewModels
     //{
     //    [PrimaryKey, AutoIncrement]
     //    private int lemmaId { get; set; }
-        
+
     //    private int dictId { get; set; }
     //    public string wordStr { get; set; }
     //    public string wordDataOft { get; set; }

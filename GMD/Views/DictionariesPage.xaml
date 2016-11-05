@@ -16,16 +16,47 @@
     </Page.Resources>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <TextBlock Text="Dictionaries Page"
-                   Margin="8"
-                   Style="{StaticResource HeaderText}"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
 
-    </Grid>
-    <Page.BottomAppBar>
-        <CommandBar>
+        <CommandBar Grid.Row="0">
+            <CommandBar.Content>
+                <TextBlock Name="DictionaryPageHeaderTextBlock"
+                           Text="Dictionary"
+                           Margin="8"
+                           Style="{StaticResource TitleText}"/>
+            </CommandBar.Content>
+
             <AppBarButton Name="AddDict"
                           Icon="Add"
-                          Label="Add Dictionary" />
+                          Label="Add Dictionary"
+                          Click="AddDict_Click"/>
         </CommandBar>
-    </Page.BottomAppBar>
+        
+        <ListView Name="DictionaryListView"
+                  HorizontalAlignment="Stretch"
+                  Grid.Row="1"
+                  ItemsSource="{Binding }">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock Name="BookNameTextBlock" 
+                                   Style="{StaticResource BodyText}"/>
+                        <RelativePanel>
+                            <TextBlock Name="WordCountTextBlock" 
+                                       HorizontalAlignment="Left"
+                                       Style="{StaticResource CaptionText}"/>
+                            <TextBlock Name="FileSizeTextBlock" 
+                                       HorizontalAlignment="Right"
+                                       Style="{StaticResource CaptionText}"/>
+                        </RelativePanel>                        
+                    </StackPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+            
+        </ListView> 
+
+    </Grid>    
 </Page>

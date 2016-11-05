@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using GMD.Models;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -25,6 +26,11 @@ namespace GMD.Views
         public DictionariesPage()
         {
             this.InitializeComponent();
+        }
+
+        private void AddDict_Click(object sender, RoutedEventArgs e)
+        {
+            ManageDicts.AddDictAsync();
         }
     }
 }

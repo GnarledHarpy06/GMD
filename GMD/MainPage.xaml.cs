@@ -55,20 +55,6 @@ namespace GMD
                     MenuFrame.GoBack();
             };
         }
-                
-        Command _backCommand;
-        //public Command BackCommand
-        //{
-        //    get { return _backCommand ?? (_backCommand = new ViewModels.Command(ExecuteBack, CanBack)); }
-        //}
-        //private bool CanBack()
-        //{
-        //    return MenuFrame.CanGoBack;
-        //}
-        //private void ExecuteBack()
-        //{
-        //    MenuFrame.GoBack();
-        //}
 
         private void HamburgerMenuButton_Click(object sender, RoutedEventArgs e)
         {
