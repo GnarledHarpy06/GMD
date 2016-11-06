@@ -1,5 +1,9 @@
-﻿using System;
+﻿using GMD.Models;
+using GMD.ViewModels;
+using SQLite.Net;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -22,6 +26,8 @@ namespace GMD
     /// </summary>
     sealed partial class App : Application
     {
+        public static ManageDicts DictsManager = new ManageDicts();
+
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
@@ -38,7 +44,7 @@ namespace GMD
         /// </summary>
         /// <param name="e">Details about the launch request and process.</param>
         protected override void OnLaunched(LaunchActivatedEventArgs e)
-        {
+        {   
 #if DEBUG
             if (System.Diagnostics.Debugger.IsAttached)
             {

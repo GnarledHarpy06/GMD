@@ -5,20 +5,21 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Windows.Storage;
-
 using SharpCompress.Archives;
 using SharpCompress.Archives.GZip;
 using System.Threading.Tasks;
 
 namespace GMD.Models
 {
-    class Dict
+    public class Dict
     {
         [PrimaryKey, AutoIncrement, Unique]
         private int dictID { get; set; }
         [Unique]
         public string FolderName { get; private set; }
+        [Unique]
         public string Directory { get; private set; }
+        public long DictSize { get; private set; }
 
         public string BookName { get; private set; }
         public int WordCount { get; private set; }
@@ -57,10 +58,10 @@ namespace GMD.Models
 #endif
         }
 
-        public async void BuildDictionaryAsync()
+        public async Task BuildDictionaryAsync()
         {
             try
-            {
+            {   
                 ifoPath = getPathByFileType(".ifo");
                 synPath = getPathByFileType(".syn");
 
@@ -147,7 +148,38 @@ namespace GMD.Models
 
             try { dictType = getStringValue(lines, "dicttype"); }
             catch { }
+
+            DictSize = new DirectoryInfo(Directory).EnumerateFiles().Sum(file => file.Length);
         }
+
+        //public void BuildDictionaryFromTableEntry(Dict entry)
+        //{
+        //    FolderName = entry.FolderName;
+        //    Directory = entry.Directory;
+        //    DictSize = entry.DictSize;
+
+        //    BookName = entry.BookName;
+        //    WordCount = entry.WordCount;
+        //    IdxFileSize = entry.IdxFileSize;
+        //    Author = entry.Author;
+        //    Email = entry.Email;
+        //    Website = entry.Website;
+        //    Description = entry.Description;
+        //    Date = entry.Date;
+
+        //    synWordCount = entry.synWordCount;
+        //    idxOffsetBits = entry.idxOffsetBits;
+        //    dictType = entry.dictType;
+        //    sameTypeSequence = entry.sameTypeSequence;
+
+        //    ifoPath = entry.ifoPath;
+        //    dictPath = entry.dictPath;
+        //    idxPath = entry.idxPath;
+        //    synPath = entry.synPath;
+
+        //    ifoOftPath = entry.ifoOftPath;
+        //    synOftPath = entry.synOftPath;
+        //}
 
         private static string getStringValue(List<string> lines, string valueType)
         {
@@ -170,7 +202,7 @@ namespace GMD.Models
             }
             return null;
         }
-
+        
         private async Task<String> extractAsync(string extension)
         {
             string path = getPathByFileType(extension);
@@ -188,7 +220,7 @@ namespace GMD.Models
             }
 
             return writePath;
-        }
+        }        
     }
 
     //public class Lemma
