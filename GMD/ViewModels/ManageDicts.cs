@@ -130,6 +130,16 @@ namespace GMD.ViewModels
 
         }
 
+        public async void RemoveDictAsync(int dictID)
+        {
+            var pathToDelete = connection.Get<Dict>(dictID).Directory;
+            var folderToDelete = await StorageFolder.GetFolderFromPathAsync(pathToDelete);
+            await folderToDelete.DeleteAsync();
+
+            connection.Delete<Dict>(dictID);
+            RaiseDictDatabaseChanged("Removed");
+        }
+
         public event PropertyChangedEventHandler DictDatabaseChanged;
 
         protected virtual void RaiseDictDatabaseChanged(string propertyName)

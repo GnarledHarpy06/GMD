@@ -15,6 +15,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using System.Collections.ObjectModel;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -28,16 +29,32 @@ namespace GMD.Views
         public DictionariesPage()
         {
             this.InitializeComponent();
-        }
+            DictionaryListView.ItemsSource = App.DictsManager.Dicts;
+        }        
 
-        private void AddDict_Click(object sender, RoutedEventArgs e)
+        private void AddDictAppBarButton_Click(object sender, RoutedEventArgs e)
         {
             App.DictsManager.AddDictAsync();
         }
 
-        private void Page_Loaded(object sender, RoutedEventArgs e)
+        private void RemoveDictAppBarButton_Click(object sender, RoutedEventArgs e)
         {
-            DictionaryListView.ItemsSource = App.DictsManager.Dicts;
+            App.DictsManager.RemoveDictAsync(
+                (DictionaryListView.ItemsSource as ObservableCollection<Dict>)
+                .ElementAtOrDefault(DictionaryListView.SelectedIndex)
+                .DictID);
+
+            // get DictionaryListView ItemSource, get the selectedItem through selectedIndex
+            // get the dictID from selectedItem
+            // RemoveDictAsync(DictId)
+        }
+
+        private void DictionaryListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (!DictionaryListView.SelectedIndex.Equals(null))
+                RemoveDictAppBarButton.IsEnabled = true;
+            else
+                RemoveDictAppBarButton.IsEnabled = false;
         }
     }
 }

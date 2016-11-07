@@ -14,7 +14,7 @@ namespace GMD.Models
     public class Dict
     {
         [PrimaryKey, AutoIncrement, Unique]
-        private int dictID { get; set; }
+        public int DictID { get; set; }
         [Unique]
         public string FolderName { get; private set; }
         [Unique]
