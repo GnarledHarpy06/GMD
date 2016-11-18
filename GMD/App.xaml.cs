@@ -27,6 +27,8 @@ namespace GMD
     sealed partial class App : Application
     {
         public static ManageDicts DictsManager = new ManageDicts();
+        public static ManageEntries EntriesManager = new ManageEntries();
+        public static DisplayEntry CurrentEntry = new DisplayEntry();
 
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code

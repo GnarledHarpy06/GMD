@@ -4,17 +4,23 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:global="using:GMD"
     xmlns:local="using:GMD.Views"
-    xmlns:model="using:GMD.Models"
+    xmlns:models="using:GMD.Models"
+    xmlns:viewModels="using:GMD.ViewModels"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
+
+    <!--<Page.DataContext>
+        <viewModels:ManageDicts x:Name="ViewModel" />
+    </Page.DataContext>-->
 
     <Page.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Styles/SimpleTextHierarchyStyles.xaml"/>
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>            
+        </ResourceDictionary>        
+        
     </Page.Resources>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
@@ -33,26 +39,25 @@
 
             <AppBarButton Name="AddDictAppBarButton"
                           Icon="Add"
-                          Label="Add Dictionary"
+                          Label="Add"
                           Click="AddDictAppBarButton_Click"/>
             <AppBarButton Name="RemoveDictAppBarButton"
                           Icon="Delete"
-                          Label="Remove Dictionary"
+                          Label="Remove"
                           Click="RemoveDictAppBarButton_Click"/>
         </CommandBar>
         
         <ListView Name="DictionaryListView"                  
                   Grid.Row="1"
-                  SelectionChanged="DictionaryListView_SelectionChanged">
+                  SelectionChanged="DictionaryListView_SelectionChanged">            
             <ListView.ItemTemplate>
-                <DataTemplate x:DataType="model:Dict">
+                <DataTemplate x:DataType="models:Dict">
                     <Grid HorizontalAlignment="Stretch"
                           VerticalAlignment="Stretch">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
-                        
+                        </Grid.RowDefinitions>                        
                         <TextBlock Name="BookNameTextBlock"                                    
                                    Grid.Row="0"
                                    Style="{StaticResource HeaderText}"

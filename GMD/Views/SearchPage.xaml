@@ -3,28 +3,72 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:GMD.Views"
+    xmlns:models="using:GMD.Models"
+    xmlns:viewModels="using:GMD.ViewModels"
+    xmlns:global="using:GMD"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    NavigationCacheMode="Required">
-    
+    NavigationCacheMode="Required"
+    Loaded="SearchPage_Loaded">
+
+    <!--<Page.DataContext>
+        <viewModels:ManageEntries x:Name="ViewModel" />
+    </Page.DataContext>-->
+
     <Page.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Styles/SimpleTextHierarchyStyles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
+        </ResourceDictionary>        
     </Page.Resources>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <StackPanel>
-            <TextBlock Text="History Page"
-                       Margin="8"
-                       Style="{StaticResource HeaderText}"/>            
-            <TextBlock Text="Search Page"
-                       Margin="8"
-                       Style="{StaticResource HeaderText}" />
-        </StackPanel>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <CommandBar Grid.Row="0">
+                <CommandBar.Content>
+                    <TextBlock Text="HistoryPage"
+                               Margin="8"
+                               Style="{StaticResource TitleText}"/>
+                </CommandBar.Content>
+            </CommandBar>
+
+            <TextBox x:Name="QueryTextBox"
+                     FontSize="24"
+                     Grid.Row="1"
+                     HorizontalAlignment="Stretch"
+                     VerticalAlignment="Top"
+                     Height="36pt"
+                     PlaceholderText="Search keyword"
+                     TextChanged="QueryTextBox_TextChanged">
+            </TextBox>
+            <ListView x:Name="QueryListView"
+                      Grid.Row="2"
+                      SelectionChanged="QueryListView_SelectionChanged">
+                <ListView.ItemTemplate>
+                    <DataTemplate x:DataType="viewModels:WordStrByBookName">
+                        <TextBlock Style="{StaticResource BodyText}"
+                                   Text="{x:Bind WordStr}"/>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+                <!--<ListView.GroupStyle>
+                    <GroupStyle>
+                        <GroupStyle.HeaderTemplate>
+                            <DataTemplate x:DataType="models:EntriesGrouping">
+                                <TextBlock Style="{StaticResource SubtitleText}"
+                                           Text="{x:Bind Key}"/>
+                            </DataTemplate>
+                        </GroupStyle.HeaderTemplate>
+                    </GroupStyle>
+                </ListView.GroupStyle>-->
+            </ListView>
+        </Grid>
 
     </Grid>
 </Page>

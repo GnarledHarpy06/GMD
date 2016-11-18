@@ -14,12 +14,13 @@ namespace GMD.Models
     public class Dict
     {
         [PrimaryKey, AutoIncrement, Unique]
-        public int DictID { get; set; }
+        public int DictID { get; private set; }
         [Unique]
         public string FolderName { get; private set; }
         [Unique]
         public string Directory { get; private set; }
         public long DictSize { get; private set; }
+        public bool IsQueried { get; set; }
 
         public string BookName { get; private set; }
         public int WordCount { get; private set; }
@@ -31,20 +32,26 @@ namespace GMD.Models
         public string Date { get; private set; }
 
         public int synWordCount { get; private set; } // unsupported
-        public byte idxOffsetBits { get; private set; }
+        public idxOffsetBitsEnum idxOffsetBits { get; private set; }
         public string dictType { get; private set; }
         public string sameTypeSequence { get; private set; }
 
-        private string ifoPath { get; set; }
-        private string dictPath { get; set; }
-        private string idxPath { get; set; }
-        private string synPath { get; set; }
+        public string ifoPath { get; private set; }
+        public string dictPath { get; private set; }
+        public string idxPath { get; private set; }
+        public string synPath { get; private set; }
 
-        private string ifoOftPath { get; set; }
-        private string synOftPath { get; set; }
+        public string ifoOftPath { get; private set; }
+        public string synOftPath { get; private set; }
 
         // private string ifoCltPath { get; set; } // unsupported
         // private string synCltPath { get; set; } // unsupported
+
+        public enum idxOffsetBitsEnum
+        {
+            Uint32,
+            Uint64
+        }
 
         public Dict() { }
 
@@ -122,7 +129,13 @@ namespace GMD.Models
             }
             catch { BookName = FolderName; }
 
-            try { idxOffsetBits = byte.Parse(getStringValue(lines, "idxoffsetbits")); }
+            try
+            {
+                if (int.Parse(getStringValue(lines, "idxoffsetbits")) == 64)
+                    idxOffsetBits = idxOffsetBitsEnum.Uint64;
+                else
+                    idxOffsetBits = idxOffsetBitsEnum.Uint32;
+            }
             catch { }
 
             try { synWordCount = int.Parse(getStringValue(lines, "synwordcount")); }
@@ -150,6 +163,51 @@ namespace GMD.Models
             catch { }
 
             DictSize = new DirectoryInfo(Directory).EnumerateFiles().Sum(file => file.Length);
+            IsQueried = true;
+        }
+
+        public async Task<string> GetDictStrAsync()
+        {
+            using (Stream stream = await
+                        (await StorageFile.GetFileFromPathAsync(this.dictPath))
+                        .OpenStreamForReadAsync())
+            using (StreamReader streamReader = new StreamReader(stream))
+            {
+                return await streamReader.ReadToEndAsync();
+            }
+        }
+
+        public async Task<string> GetIdxStrAsync()
+        {
+            using (Stream stream = await
+                        (await StorageFile.GetFileFromPathAsync(this.idxPath))
+                        .OpenStreamForReadAsync())
+            using (StreamReader streamReader = new StreamReader(stream))
+            {
+                return await streamReader.ReadToEndAsync();
+            }
+        }
+
+        public async Task<string[]> GetKeywordsFromDictAsync()
+        {
+            string idxStr = await this.GetIdxStrAsync();
+            int dictWordCount = this.WordCount;
+            string[] arrayOfKeywords = new string[dictWordCount];
+
+            int offsetLength;
+            if (this.idxOffsetBits == Dict.idxOffsetBitsEnum.Uint64)
+                offsetLength = 8;
+            else
+                offsetLength = 4;
+
+            for (int i = 0; i < dictWordCount; i++)
+            {
+                int pointer2 = idxStr.IndexOf('\0');
+                arrayOfKeywords[i] = idxStr.Substring(0, pointer2);
+
+                idxStr = idxStr.Remove(0, pointer2 + 1 + offsetLength + 4);
+            }
+            return arrayOfKeywords;
         }
 
         //public void BuildDictionaryFromTableEntry(Dict entry)

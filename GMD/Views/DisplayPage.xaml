@@ -5,20 +5,65 @@
     xmlns:local="using:GMD.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    NavigationCacheMode="Required"
     mc:Ignorable="d">
 
     <Page.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Styles/SimpleTextHierarchyStyles.xaml"/>
-            </ResourceDictionary.MergedDictionaries>
+            </ResourceDictionary.MergedDictionaries>            
         </ResourceDictionary>
     </Page.Resources>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <TextBlock Text="Display Page"
-                   Margin="8"
-                   Style="{StaticResource HeaderText}"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <CommandBar>
+            <AppBarButton Icon="Copy"
+                          IsEnabled="False"/>
+            <AppBarButton IsEnabled="False">
+                <AppBarButton.Icon>
+                    <FontIcon FontFamily="Segoe MDL2 Assets"
+                              Glyph="&#xE734;" />
+                </AppBarButton.Icon>
+            </AppBarButton>
+            <AppBarButton IsEnabled="False">
+                <AppBarButton.Icon>
+                    <FontIcon FontFamily="Segoe MDL2 Assets"
+                              Glyph="&#xE72D;" />
+                </AppBarButton.Icon>
+            </AppBarButton>
+        </CommandBar>
+        <ScrollViewer Grid.Row="1"
+                      VerticalScrollMode="Auto"
+                      HorizontalScrollMode="Disabled">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition />                    
+                </Grid.RowDefinitions>
+                
+                <Grid Grid.Row="0" 
+                      Background="{ThemeResource InkToolbarAccentColorThemeBrush}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0"
+                               Name="DictNameTextBlock"
+                               Style="{StaticResource SubtitleText}"/>
+                    <TextBlock Grid.Row="1"
+                               Name="EntryWordStrTextBlock"
+                               Style="{StaticResource HeaderText}"/>
+                </Grid>
+                <RichTextBlock Grid.Row="1"
+                               Name="EntryDefinitionRichTextBlock"/>
+            </Grid>
+        </ScrollViewer>
 
     </Grid>
 </Page>

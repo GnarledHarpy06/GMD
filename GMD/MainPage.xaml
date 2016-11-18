@@ -112,9 +112,20 @@
                 </RelativePanel>
             </SplitView.Pane>
             <SplitView.Content>
-                <Frame x:Name="MenuFrame" 
-                       Grid.Column="1"
-                       CacheSize="3" />
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*" />
+                        <ColumnDefinition Width="5*"/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <Frame x:Name="MenuFrame" 
+                           Grid.Column="0"
+                           CacheSize="4" />
+                    <Frame x:Name="DisplayFrame"
+                           Grid.Column="1"
+                           Grid.RowSpan="3" />
+                </Grid>
+
             </SplitView.Content>
         </SplitView>
         <Button x:Name="HamburgerMenuButton"

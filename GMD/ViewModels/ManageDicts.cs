@@ -18,10 +18,10 @@ namespace GMD.ViewModels
     {
         public ManageDicts()
         {
-            GetDatabaseConnection();
-            GetDictionaryFromTable();
+            getDatabaseConnection();
+            updateDictionary();
 
-            DictDatabaseChanged += (s, e) => UpdateDictionary();
+            DictDatabaseChanged += (s, e) => updateDictionary();
         }
 
         private string path = Path.Combine
@@ -48,34 +48,30 @@ namespace GMD.ViewModels
         //    return _connection;
         //}
 
-        private void GetDatabaseConnection()
+        private void getDatabaseConnection()
         {
             if (!File.Exists(path))
             {
                 connection = new SQLiteConnection
                     (new SQLitePlatformWinRT(), path);
                 connection.CreateTable<Dict>();
+                connection.CreateTable<WordStrDBIndex>();
+                connection.CreateTable<RecentEntry>();
+                connection.CreateTable<FavouritEntry>();
             }
             else
             {
                 connection = new SQLiteConnection
                     (new SQLitePlatformWinRT(), path);
             }           
-        }
+        }        
 
-        public void GetDictionaryFromTable()
+        private void getDictionaryFromTable()
         {
             var query = connection.Table<Dict>();
             if(query != null)
             foreach (Dict dict in query)
                 Dicts.Add(dict);
-        }
-
-        public void UpdateDictionary()
-        {
-            if(Dicts != null)
-                Dicts.Clear();
-            GetDictionaryFromTable();
         }
 
         private async Task<StorageFile> pickAFileAsync()
@@ -122,8 +118,15 @@ namespace GMD.ViewModels
 
                 Dict newDict = new Dict(extractionFolder);
                 await newDict.BuildDictionaryAsync();
+                connection.Insert(newDict, newDict.GetType());
 
-                connection.Insert(newDict);
+                string[] wordStrs = await newDict.GetKeywordsFromDictAsync();
+                WordStrDBIndex[] wordStrDBIndexes = new WordStrDBIndex[newDict.WordCount];
+
+                for (int i = 0; i < newDict.WordCount; i++)                
+                    wordStrDBIndexes[i] = new WordStrDBIndex() { WordStr = wordStrs[i], DictId = newDict.DictID };
+                
+                connection.InsertAll(wordStrDBIndexes);                
                 RaiseDictDatabaseChanged("Added");
             }
             finally { }
@@ -138,6 +141,13 @@ namespace GMD.ViewModels
 
             connection.Delete<Dict>(dictID);
             RaiseDictDatabaseChanged("Removed");
+        }
+
+        public void updateDictionary()
+        {
+            if (Dicts != null)
+                Dicts.Clear();
+            getDictionaryFromTable();
         }
 
         public event PropertyChangedEventHandler DictDatabaseChanged;

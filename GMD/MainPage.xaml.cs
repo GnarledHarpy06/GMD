@@ -27,7 +27,9 @@ namespace GMD
         public MainPage()
         {
             this.InitializeComponent();
+            DisplayFrame.Navigate(typeof(DisplayPage));
             MenuFrame.Navigate(typeof(SearchPage));
+
             var update = new Action(() =>
             {
                 // update radiobuttons after frame navigates
@@ -48,6 +50,8 @@ namespace GMD
 
             Windows.UI.Core.SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility
                 = Windows.UI.Core.AppViewBackButtonVisibility.Visible; // this thing is not adaptive yet
+            //Windows.UI.Core.SystemNavigationManager.GetForCurrentView().BackRequested += OnHardwareButtonsBackPressed;
+
 
             Windows.UI.Core.SystemNavigationManager.GetForCurrentView().BackRequested += (s, e) =>
             {
