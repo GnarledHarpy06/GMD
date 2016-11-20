@@ -30,11 +30,13 @@ namespace GMD.Views
         {
             this.InitializeComponent();
             App.CurrentEntry.PropertyChanged += (s, e) => this.DisplayedEntry.UpdateEntry(App.CurrentEntry);
-            DisplayedEntry.PropertyChanged += (s, e) => this.FollowUpRichTextBlockRebind();
+            DisplayedEntry.PropertyChanged += (s, e) => this.FollowUpRebind();
         }
         
-        void FollowUpRichTextBlockRebind()
+        void FollowUpRebind()
         {
+            Bindings.Update();
+
             EntryDefinitionRichTextBlock.Blocks.Clear();
             foreach (Paragraph p in this.DisplayedEntry.Definition)
                 EntryDefinitionRichTextBlock.Blocks.Add(p);

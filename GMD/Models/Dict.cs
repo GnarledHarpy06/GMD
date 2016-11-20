@@ -205,12 +205,14 @@ namespace GMD.Models
             else
                 offsetLength = 4;
 
+            int pointer = 0;
             for (int i = 0; i < this.WordCount; i++)
             {
-                int pointer2 = idxStr.Locate(0x00);
-                arrayOfKeywords[i] = DataConversion.GetString(idxStr.SubsByteArray(0, pointer2));
+                int pointer2 = idxStr.Locate(0x00, pointer);
+                byte[] wordStrByteArray = idxStr.SubsByteArray(pointer, pointer2 - pointer);
+                arrayOfKeywords[i] = DataConversion.GetString(wordStrByteArray);
 
-                idxStr = idxStr.Remove(0, pointer2 + 1 + offsetLength + 4);
+                pointer += wordStrByteArray.Length + offsetLength + 4 + 1;
             }
             return arrayOfKeywords;
         }

@@ -172,9 +172,33 @@ namespace GMD.ViewModels
             return -1;
         }
 
+        public static int Locate(this byte[] self, byte[] candidate, int startPos)
+        {
+            if (IsEmptyLocate(self, candidate))
+                return -1;
+
+            for (int i = startPos; i < self.Length; i++)
+            {
+                if (IsMatch(self, i, candidate))
+                    return i;
+            }
+
+            return -1;
+        }
+
         public static int Locate(this byte[] self, byte candidate)
         {
             for (int i = 0; i < self.Length; i++)
+            {
+                if (self[i] == candidate)
+                    return i;
+            }
+            return -1;
+        }
+
+        public static int Locate(this byte[] self, byte candidate, int startPos)
+        {
+            for (int i = startPos; i < self.Length; i++)
             {
                 if (self[i] == candidate)
                     return i;

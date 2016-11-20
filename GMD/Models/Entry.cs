@@ -65,6 +65,10 @@ namespace GMD.Models
         {
             Dict entryDict = new ManageDicts().Dicts.Where(p => p.DictID == entry.DictId).FirstOrDefault();
             BookName = entryDict.BookName;
+            WordStr = entry.WordStr;
+            wordDataOffset = entry.wordDataOffset;
+            wordDataSize = entry.wordDataSize;
+            
             string dictPath = entryDict.dictPath;
 
             using (FileStream fileStream = new FileStream(dictPath, FileMode.Open, FileAccess.Read))
