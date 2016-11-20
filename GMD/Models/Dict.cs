@@ -1,4 +1,5 @@
-﻿using SQLite.Net.Attributes;
+﻿using GMD.ViewModels;
+using SQLite.Net.Attributes;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -166,15 +167,20 @@ namespace GMD.Models
             IsQueried = true;
         }
 
-        public async Task<string> GetDictStrAsync()
+        //public async Task<string> GetDictStrAsync()
+        //{
+        //    using (Stream stream = await
+        //                (await StorageFile.GetFileFromPathAsync(this.dictPath))
+        //                .OpenStreamForReadAsync())
+        //    using (StreamReader streamReader = new StreamReader(stream))
+        //    {
+        //        return await streamReader.ReadToEndAsync();
+        //    }
+        //} NOT USED
+
+        public byte[] GetIdxByteArray()
         {
-            using (Stream stream = await
-                        (await StorageFile.GetFileFromPathAsync(this.dictPath))
-                        .OpenStreamForReadAsync())
-            using (StreamReader streamReader = new StreamReader(stream))
-            {
-                return await streamReader.ReadToEndAsync();
-            }
+            return File.ReadAllBytes(this.idxPath);
         }
 
         public async Task<string> GetIdxStrAsync()
@@ -188,11 +194,10 @@ namespace GMD.Models
             }
         }
 
-        public async Task<string[]> GetKeywordsFromDictAsync()
+        public string[] GetKeywordsFromDictAsync()
         {
-            string idxStr = await this.GetIdxStrAsync();
-            int dictWordCount = this.WordCount;
-            string[] arrayOfKeywords = new string[dictWordCount];
+            byte[] idxStr = this.GetIdxByteArray();
+            string[] arrayOfKeywords = new string[this.WordCount];
 
             int offsetLength;
             if (this.idxOffsetBits == Dict.idxOffsetBitsEnum.Uint64)
@@ -200,10 +205,10 @@ namespace GMD.Models
             else
                 offsetLength = 4;
 
-            for (int i = 0; i < dictWordCount; i++)
+            for (int i = 0; i < this.WordCount; i++)
             {
-                int pointer2 = idxStr.IndexOf('\0');
-                arrayOfKeywords[i] = idxStr.Substring(0, pointer2);
+                int pointer2 = idxStr.Locate(0x00);
+                arrayOfKeywords[i] = DataConversion.GetString(idxStr.SubsByteArray(0, pointer2));
 
                 idxStr = idxStr.Remove(0, pointer2 + 1 + offsetLength + 4);
             }

@@ -36,17 +36,37 @@ namespace GMD.Views
             App.EntriesManager.QueryKeywords(QueryTextBox.Text);
         }
         
-        private async void SearchPage_Loaded(object sender, RoutedEventArgs e)
+        private void SearchPage_Loaded(object sender, RoutedEventArgs e)
         {   
-            Loaded -= SearchPage_Loaded; // tfw best practice :p
-            await App.EntriesManager.ConstructAsync();
+            Loaded -= SearchPage_Loaded;
+            App.EntriesManager.ConstructAsync();
+            // tfw best practice :p
         }
 
-        private async void QueryListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void QueryListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if(QueryListView.SelectedItem != null)
-              App.CurrentEntry = new DisplayEntry( await App.EntriesManager.GetEntryAsync((WordStrByBookName)QueryListView.SelectedItem));
-                // tfw best practice :p            
+            {
+                App.CurrentEntry.UpdateEntry(App.EntriesManager.GetEntry((WordStrByBookName)QueryListView.SelectedItem));               
+            }
         }
+
+        //public delegate void EntryUpdateHandler(object sender, SearchPageEventArgs e);
+        //public event EntryUpdateHandler OnCurrentEntryChanged;
+
+        //void RaiseOnCurrentEntryChanged(Entry selectedEntry)
+        //{
+        //    OnCurrentEntryChanged?.Invoke(this, new SearchPageEventArgs(selectedEntry));
+        //}
     }
+
+    //public class SearchPageEventArgs : EventArgs
+    //{
+    //    public Entry SelectedEntry { get; private set; }
+
+    //    public SearchPageEventArgs(Entry newEntry)
+    //    {
+    //        SelectedEntry = newEntry;
+    //    }        
+    //}
 }

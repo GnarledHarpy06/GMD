@@ -3,13 +3,33 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.ComponentModel;
+using System.Collections.ObjectModel;
+using Windows.UI.Xaml.Documents;
 
 namespace GMD.Models
 {
-    public class Entry
+    public class SimpleWordStrBaseClass
     {
-        public string wordStr { get; set; }
+        public string WordStr { get; set; }
+    }
+
+    public class WordStrDBIndex : SimpleWordStrBaseClass
+    {
         public int DictId { get; set; }
+    }
+
+    public class WordStrByBookName : SimpleWordStrBaseClass
+    {
+        public string BookName { get; set; }
+    }
+
+    /* Two classes above only serves for mundane purpose
+     * Better fix it later
+     */
+
+    public class Entry : WordStrDBIndex
+    {
         public string wordDataOffset { get; set; }
         public Int64 wordDataSize { get; set; }
     }
@@ -29,13 +49,16 @@ namespace GMD.Models
     //        Entries.GetEnumerator();
     //}
 
-    public class DisplayEntry :  Entry
+    public class DisplayEntry : Entry, INotifyPropertyChanged
     {
         public DisplayEntry()
         {
             BookName = "GMD Modular Dictionary";
-            wordStr = "WELCOME MY DEAR";
-            Definition = "Start by entering keyword in the text box";
+            WordStr = "WELCOME MY DEAR";
+            Definition = new ObservableCollection<Paragraph>();
+            var p = new Paragraph();
+            p.Inlines.Add(new Run { Text = "Start by entering keyword in the text box" });
+            Definition.Add(p);
         }
 
         public DisplayEntry(Entry entry)
@@ -53,39 +76,61 @@ namespace GMD.Models
                 fileStream.Seek(seekOffset, SeekOrigin.Begin);
                 fileStream.Read(buffer, 0, length);
 
-                char[] charArray = new char[length];
+                string charString = DataConversion.GetString(buffer);
 
-                int j = 0; // var to record charArray offset caused by utf16 char
-                for (int i = 0; i < length; i++)
+                var paragraphs = charString.Split('\n');
+                Definition = new ObservableCollection<Paragraph>();
+
+                foreach(string paragraph in paragraphs)
                 {
-                    if ((buffer[i] & 0xf0) == 0xf0)
-                    {
-                        byte[] _UTF16Char = new byte[2] { buffer[i], buffer[i + 1] };
-                        if (BitConverter.IsLittleEndian)
-                            Array.Reverse(_UTF16Char);
-
-                        charArray[i - j] = BitConverter.ToChar(_UTF16Char, 0);
-                        i++;
-                        j++;
-                        // UTF16 workaround. tfw best practice :p
-                    }
-                    else
-                        charArray[i - j] = BitConverter.ToChar(new byte[2] { buffer[i], 0 }, 0);
+                    Run run = new Run();
+                    Paragraph newParagraph = new Paragraph();
+                    run.Text = paragraph;
+                    newParagraph.Inlines.Add(run);
+                    Definition.Add(newParagraph);
                 }
-                Definition = new string(charArray);
-
-                RaiseCurrentEntryChanged("Current Entry Changed");
             }
         }
 
-        public string BookName { get; private set; }
-        public string Definition { get; private set; }
-
-        public static event System.ComponentModel.PropertyChangedEventHandler CurrentEntryChanged;
-
-        protected virtual void RaiseCurrentEntryChanged(string propertyName)
+        public void UpdateEntry(Entry entry)
         {
-            CurrentEntryChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            DisplayEntry newEntry = new DisplayEntry(entry);
+            this.WordStr = newEntry.WordStr;
+            this.BookName = newEntry.BookName;
+            this.DictId = newEntry.DictId;
+            this.wordDataOffset = newEntry.wordDataOffset;
+            this.wordDataSize = newEntry.wordDataSize;
+
+            this.Definition.Clear();
+            foreach(Paragraph p in newEntry.Definition)
+                this.Definition.Add(p);                       
+
+            RaisePropertyChanged("Current Entry Changed");
+        }
+
+        public void UpdateEntry(DisplayEntry newEntry)
+        {
+            this.WordStr = newEntry.WordStr;
+            this.BookName = newEntry.BookName;
+            this.DictId = newEntry.DictId;
+            this.wordDataOffset = newEntry.wordDataOffset;
+            this.wordDataSize = newEntry.wordDataSize;
+
+            this.Definition.Clear();
+            foreach (Paragraph p in newEntry.Definition)
+                this.Definition.Add(p);
+
+            RaisePropertyChanged("Current Entry Changed");
+        }
+
+        public string BookName { get; set; }
+        public ObservableCollection<Paragraph> Definition { get; set; }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void RaisePropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
     public class RecentEntry : Entry

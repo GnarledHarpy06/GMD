@@ -15,6 +15,7 @@ namespace GMD.ViewModels
 {
     public class ManageEntries
     {
+        private byte[][] arrayOfAllQueriedIdxByteArray;
         private WordStrsIndex[] arrayOfAllQueriedWordStrsIndex;
         public ObservableCollection<WordStrByBookName> CollectionMatchedOfKeywordsByBookName = 
             new ObservableCollection<WordStrByBookName>();
@@ -28,14 +29,30 @@ namespace GMD.ViewModels
             getDatabaseConnection(); // ConstructorAsync() to delegate constructor method 
         }
 
-        public async Task ConstructAsync()
+        public void ConstructAsync()
         {
             try
             {
                 App.DictsManager.DictDatabaseChanged += (s, e) => updatearrayOfAllQueriedKeywordsAsync();
-                populatearrayOfAllQueriedWordStrsIndexesAsync();                
+                populatearrayOfAllQueriedWordStrsIndexesAsync();
+                populatearrayOfAllQueriedIdxByteArray();
             }
             catch { }
+        }
+
+        private void populatearrayOfAllQueriedIdxByteArray()
+        {
+            var dicts = connection.Table<Dict>().Where(p => p.IsQueried);            
+            arrayOfAllQueriedIdxByteArray = new byte[dicts.Max(p => p.DictID) + 1][];
+
+            foreach (Dict dict in dicts)
+            {
+                try
+                {
+                    arrayOfAllQueriedIdxByteArray[dict.DictID] = dict.GetIdxByteArray();
+                }
+                catch { }
+            }
         }
 
         private void populatearrayOfAllQueriedWordStrsIndexesAsync()
@@ -58,54 +75,45 @@ namespace GMD.ViewModels
             arrayOfAllQueriedWordStrsIndex = arrayOfWordStrsIndexes;
         }                
 
-        public async Task<Entry> GetEntryAsync(WordStrByBookName word)
+        public Entry GetEntry(WordStrByBookName word)
         {
             Dict dict = connection.Table<Dict>().Where(p => p.BookName == word.BookName).FirstOrDefault();
-            string idxStr =  await dict.GetDictStrAsync();
-
-            int offsetwordStr = idxStr.IndexOf(word.WordStr + '\0');
-            int wordStrLength = word.WordStr.Length;
+            byte[] wordStrByteArray = DataConversion.GetBytes(word.WordStr + '\0');
+            int offsetwordStr = arrayOfAllQueriedIdxByteArray[dict.DictID].Locate(wordStrByteArray);
+            int wordStrLength = wordStrByteArray.Length - 1;
 
             int offsetOffset = offsetwordStr + wordStrLength + 1;
             int offsetLength = 4;
 
-            if (dict.idxOffsetBits == Dict.idxOffsetBitsEnum.Uint64)            
+            string wordDataOffset;
+            uint wordDataSize;
+
+            if (dict.idxOffsetBits == Dict.idxOffsetBitsEnum.Uint64)
+            {
                 offsetLength = 8;
-                        
-            int lengthOffset = offsetOffset + offsetLength;
-            int lengthLength = 4;            
+                int lengthOffset = offsetOffset + offsetLength;
+                int lengthLength = 4;
+                
+                wordDataOffset = DataConversion.GetUInt64(arrayOfAllQueriedIdxByteArray[dict.DictID].SubsByteArray(offsetOffset, offsetLength)).ToString();
+                wordDataSize = DataConversion.GetUInt32(arrayOfAllQueriedIdxByteArray[dict.DictID].SubsByteArray(lengthOffset, lengthLength));
+                
+            }
+            else
+            {
+                int lengthOffset = offsetOffset + offsetLength;
+                int lengthLength = 4;
+
+                wordDataOffset = DataConversion.GetUInt32(arrayOfAllQueriedIdxByteArray[dict.DictID].SubsByteArray(offsetOffset, offsetLength)).ToString();
+                wordDataSize = DataConversion.GetUInt32(arrayOfAllQueriedIdxByteArray[dict.DictID].SubsByteArray(lengthOffset, lengthLength));
+            }
 
             return new Entry()
             {
                 DictId = dict.DictID,
-                wordStr = idxStr.Substring(offsetwordStr, wordStrLength),
-                wordDataOffset = getUInt32(idxStr.Substring(offsetOffset, offsetLength)).ToString(),
-                wordDataSize = getUInt32(idxStr.Substring(lengthOffset, lengthLength))
-            };
-        }
-
-        private static UInt64 getUInt64(string Uint64Str)
-        {
-            byte[] tmp = new byte[8];
-            for (int i = 0; i < 8; i++)
-                tmp[i] = BitConverter.GetBytes(Uint64Str[i])[0];
-
-            if (BitConverter.IsLittleEndian)
-                Array.Reverse(tmp);
-
-            return BitConverter.ToUInt64(tmp, 0);
-        }
-
-        private static UInt32 getUInt32(string Uint32Str)
-        {
-            byte[] tmp = new byte[4];
-            for (int i = 0; i < 4; i++)
-                tmp[i] = BitConverter.GetBytes(Uint32Str[i])[0];
-
-            if (BitConverter.IsLittleEndian)
-                Array.Reverse(tmp);
-
-            return BitConverter.ToUInt32(tmp, 0);
+                WordStr = word.WordStr,
+                wordDataOffset = wordDataOffset,
+                wordDataSize = wordDataSize
+            };                        
         }
 
         public void QueryKeywords(string keyword)
@@ -139,8 +147,11 @@ namespace GMD.ViewModels
             catch { }
         }
 
-        private void updatearrayOfAllQueriedKeywordsAsync() =>
+        private void updatearrayOfAllQueriedKeywordsAsync()
+        {
             populatearrayOfAllQueriedWordStrsIndexesAsync();
+            populatearrayOfAllQueriedIdxByteArray();
+        }
     }
 
     public class WordStrsIndex
@@ -195,56 +206,5 @@ namespace GMD.ViewModels
              * or has IndexOf return value 0
              */
         }
-
-        public WordStrByBookName[] GetWordStrsByBookName(string bookName)
-        {
-            WordStrByBookName[] arrayOfWordStrsByBookName = new WordStrByBookName[WordStrs.Count()];
-            for (int i = 0; i < WordStrs.Count(); i++)
-            {
-                arrayOfWordStrsByBookName[i] = new WordStrByBookName()
-                {
-                    WordStr = WordStrs[i],
-                    BookName = bookName
-                };
-            }
-
-            return arrayOfWordStrsByBookName;
-        }
-
-        public WordStrDBIndex[] GetWordStrDBIndexes()
-        {
-            WordStrDBIndex[] arrayOfWordStrDBIndexes = new WordStrDBIndex[WordStrs.Count()];
-            for (int i = 0; i < WordStrs.Count(); i++)
-            {
-                arrayOfWordStrDBIndexes[i] = new WordStrDBIndex()
-                {
-                    WordStr = WordStrs[i],
-                    DictId = DictId
-                };
-            }
-
-            return arrayOfWordStrDBIndexes;
-        }
     }
-
-    public class SimpleWordStrBaseClass
-    {
-        public string WordStr { get; set; }
-    }
-
-    public class WordStrDBIndex : SimpleWordStrBaseClass
-    {
-        public int DictId { get; set; }
-    }
-
-    public class WordStrByBookName : SimpleWordStrBaseClass
-    {
-        public string BookName { get; set; }
-    }
-
-    /* Two classes above only serves for mundane purpose
-     * Better fix it later
-     */
-
-
 }

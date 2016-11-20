@@ -120,7 +120,7 @@ namespace GMD.ViewModels
                 await newDict.BuildDictionaryAsync();
                 connection.Insert(newDict, newDict.GetType());
 
-                string[] wordStrs = await newDict.GetKeywordsFromDictAsync();
+                string[] wordStrs = newDict.GetKeywordsFromDictAsync();
                 WordStrDBIndex[] wordStrDBIndexes = new WordStrDBIndex[newDict.WordCount];
 
                 for (int i = 0; i < newDict.WordCount; i++)                

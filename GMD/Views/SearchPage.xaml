@@ -52,7 +52,7 @@
                       Grid.Row="2"
                       SelectionChanged="QueryListView_SelectionChanged">
                 <ListView.ItemTemplate>
-                    <DataTemplate x:DataType="viewModels:WordStrByBookName">
+                    <DataTemplate x:DataType="models:WordStrByBookName">
                         <TextBlock Style="{StaticResource BodyText}"
                                    Text="{x:Bind WordStr}"/>
                     </DataTemplate>

@@ -55,13 +55,16 @@
                     </Grid.RowDefinitions>
                     <TextBlock Grid.Row="0"
                                Name="DictNameTextBlock"
+                               Text="{x:Bind DisplayedEntry.BookName}"
                                Style="{StaticResource SubtitleText}"/>
                     <TextBlock Grid.Row="1"
+                               Text="{x:Bind DisplayedEntry.WordStr}"
                                Name="EntryWordStrTextBlock"
                                Style="{StaticResource HeaderText}"/>
                 </Grid>
                 <RichTextBlock Grid.Row="1"
-                               Name="EntryDefinitionRichTextBlock"/>
+                               x:Name="EntryDefinitionRichTextBlock">                    
+                </RichTextBlock>
             </Grid>
         </ScrollViewer>
 

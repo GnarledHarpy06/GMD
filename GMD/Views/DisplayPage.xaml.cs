@@ -24,23 +24,21 @@ namespace GMD.Views
     /// </summary>
     public sealed partial class DisplayPage : Page
     {
+        private DisplayEntry DisplayedEntry = new DisplayEntry();
+
         public DisplayPage()
         {
             this.InitializeComponent();
-            UpdateDisplayedEntry();
-            DisplayEntry.CurrentEntryChanged += (s , e) => UpdateDisplayedEntry();
+            App.CurrentEntry.PropertyChanged += (s, e) => this.DisplayedEntry.UpdateEntry(App.CurrentEntry);
+            DisplayedEntry.PropertyChanged += (s, e) => this.FollowUpRichTextBlockRebind();
         }
-
-        void UpdateDisplayedEntry()
+        
+        void FollowUpRichTextBlockRebind()
         {
-            Run run = new Run();
-            Paragraph p = new Paragraph();
-            run.Text = App.CurrentEntry.Definition;
-            p.Inlines.Add(run);
-
-            EntryDefinitionRichTextBlock.Blocks.Add(p);
-            DictNameTextBlock.Text = App.CurrentEntry.BookName;
-            EntryWordStrTextBlock.Text = App.CurrentEntry.wordStr;
-        }        
+            EntryDefinitionRichTextBlock.Blocks.Clear();
+            foreach (Paragraph p in this.DisplayedEntry.Definition)
+                EntryDefinitionRichTextBlock.Blocks.Add(p);
+            // tfw best practice :p
+        }
     }
 }
