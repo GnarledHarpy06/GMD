@@ -50,63 +50,9 @@ namespace GMD.ViewModels
 
         public static string GetString(byte[] self)
         {
-            List<char> charList = new List<char>();
-
-            int j = 0; // var to record charArray offset caused by utf16 char
-            for (int i = 0; i < self.Length; i++)
-            {
-                if ((self[i] & 0x80) == 0x00)
-                {
-                    byte[] _UTF8SingleByte;
-                    if(BitConverter.IsLittleEndian)
-                        _UTF8SingleByte = new byte[] { self[i], 0 };
-                    else
-                        _UTF8SingleByte = new byte[] { 0, self[i] };
-
-                    charList.Add(BitConverter.ToChar(_UTF8SingleByte, 0));
-                }
-                else if ((self[i] & 0xC0) == 0xC0)
-                {
-                    byte[] _UTF8DoubleBytes = new byte[] { self[i], self[i + 1] };
-
-                    if (BitConverter.IsLittleEndian)
-                        charList.Add(Encoding.UTF8.GetChars(_UTF8DoubleBytes).FirstOrDefault()); // hack
-                    else
-                        charList.Add(Encoding.BigEndianUnicode.GetChars(_UTF8DoubleBytes).FirstOrDefault()); // hack                        
-
-                    i++;
-                    j++;
-                    // UTF-8 2 bytes char workaround. tfw best practice :p
-                }
-                else if ((self[i] & 0xE0) == 0xE0)
-                {
-                    byte[] _UTF8TripleleBytes = new byte[] { self[i], self[i + 1], self[i + 2] };
-
-                    if (BitConverter.IsLittleEndian)
-                        charList.Add(Encoding.UTF8.GetChars(_UTF8TripleleBytes).FirstOrDefault()); // hack
-                    else
-                        charList.Add(Encoding.BigEndianUnicode.GetChars(_UTF8TripleleBytes).FirstOrDefault()); // hack                        
-
-                    i += 2;
-                    j += 2;
-                    // UTF-8 3 bytes char workaround. tfw best practice :p
-                }
-                else if ((self[i] & 0xF0) == 0xF0)
-                {
-                    byte[] _UTF8QuadBytes = new byte[] { self[i], self[i + 1], self[i + 2], self[i + 3] };
-
-                    if (BitConverter.IsLittleEndian)
-                        charList.Add(Encoding.UTF8.GetChars(_UTF8QuadBytes).FirstOrDefault()); // hack
-                    else
-                        charList.Add(Encoding.BigEndianUnicode.GetChars(_UTF8QuadBytes).FirstOrDefault()); // hack                        
-
-                    i += 3;
-                    j += 3;
-                    // UTF-8 4 bytes char workaround. tfw best practice :p
-                }
-            }
-
-            return new string(charList.ToArray<char>());            
+            return (BitConverter.IsLittleEndian)
+                ? Encoding.UTF8.GetString(self)
+                : Encoding.BigEndianUnicode.GetString(self);
         }
 
         public static UInt64 GetUInt64(string Uint64Str)
@@ -159,47 +105,18 @@ namespace GMD.ViewModels
                 return BitConverter.ToUInt64(tmp, 0);
         }
 
-        public static byte[] GetBytes(string charArray)
+        public static byte[] GetBytes(string _string)
         {
-            List<byte> tmp = new List<byte>();
-
-            foreach(char chr in charArray)
-            {
-                byte[] chrTmp = new byte[2];
-                chrTmp = BitConverter.GetBytes(chr);
-                
-                if ((chrTmp[0] & 0x80) != 0x80)
-                    tmp.Add(chrTmp[0]);
-                else
-                {
-                    byte[] bytes;
-                    if (BitConverter.IsLittleEndian)
-                        bytes = Encoding.UTF8.GetBytes(new char[] { chr });
-                    else
-                        bytes = Encoding.BigEndianUnicode.GetBytes(new char[] { chr });
-
-                    foreach (byte _byte in bytes)
-                        tmp.Add(_byte);
-                }
-            }
-            return tmp.ToArray<byte>();
+            return (BitConverter.IsLittleEndian)
+                ? Encoding.UTF8.GetBytes(_string)
+                : Encoding.BigEndianUnicode.GetBytes(_string);
         }
 
         public static byte[] GetBytes(char[] charArray)
         {
-            List<byte> tmp = new List<byte>();
-            
-            foreach (char chr in charArray)
-            {
-                byte[] chrTmp = new byte[2];
-                chrTmp = BitConverter.GetBytes(chr);
-
-                tmp.Add(chrTmp[0]);
-                if ((chrTmp[0] & 0x80) == 0x80)
-                    tmp.Add(chrTmp[1]);
-            }
-
-            return tmp.ToArray<byte>();
+            return (BitConverter.IsLittleEndian)
+                ? Encoding.UTF8.GetBytes(charArray)
+                : Encoding.BigEndianUnicode.GetBytes(charArray);
         }
 
         static public WordStrByBookName[] GetWordStrsByBookName(this WordStrsIndex self, string bookName)
