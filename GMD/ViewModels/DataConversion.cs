@@ -55,21 +55,55 @@ namespace GMD.ViewModels
             int j = 0; // var to record charArray offset caused by utf16 char
             for (int i = 0; i < self.Length; i++)
             {
-                if ((self[i] & 0x80) == 0x80)
+                if ((self[i] & 0x80) == 0x00)
                 {
-                    byte[] _UTF16Char = new byte[] { self[i], self[i + 1] };
-                    
-                    if (BitConverter.IsLittleEndian)
-                        charList.Add(Encoding.UTF8.GetChars(_UTF16Char).FirstOrDefault()); // hack
+                    byte[] _UTF8SingleByte;
+                    if(BitConverter.IsLittleEndian)
+                        _UTF8SingleByte = new byte[] { self[i], 0 };
                     else
-                        charList.Add(Encoding.BigEndianUnicode.GetChars(_UTF16Char).FirstOrDefault()); // hack                        
+                        _UTF8SingleByte = new byte[] { 0, self[i] };
+
+                    charList.Add(BitConverter.ToChar(_UTF8SingleByte, 0));
+                }
+                else if ((self[i] & 0xC0) == 0xC0)
+                {
+                    byte[] _UTF8DoubleBytes = new byte[] { self[i], self[i + 1] };
+
+                    if (BitConverter.IsLittleEndian)
+                        charList.Add(Encoding.UTF8.GetChars(_UTF8DoubleBytes).FirstOrDefault()); // hack
+                    else
+                        charList.Add(Encoding.BigEndianUnicode.GetChars(_UTF8DoubleBytes).FirstOrDefault()); // hack                        
 
                     i++;
                     j++;
-                    // UTF16 workaround. tfw best practice :p
+                    // UTF-8 2 bytes char workaround. tfw best practice :p
                 }
-                else
-                    charList.Add(BitConverter.ToChar(new byte[2] { self[i], 0 }, 0));
+                else if ((self[i] & 0xE0) == 0xE0)
+                {
+                    byte[] _UTF8TripleleBytes = new byte[] { self[i], self[i + 1], self[i + 2] };
+
+                    if (BitConverter.IsLittleEndian)
+                        charList.Add(Encoding.UTF8.GetChars(_UTF8TripleleBytes).FirstOrDefault()); // hack
+                    else
+                        charList.Add(Encoding.BigEndianUnicode.GetChars(_UTF8TripleleBytes).FirstOrDefault()); // hack                        
+
+                    i += 2;
+                    j += 2;
+                    // UTF-8 3 bytes char workaround. tfw best practice :p
+                }
+                else if ((self[i] & 0xF0) == 0xF0)
+                {
+                    byte[] _UTF8QuadBytes = new byte[] { self[i], self[i + 1], self[i + 2], self[i + 3] };
+
+                    if (BitConverter.IsLittleEndian)
+                        charList.Add(Encoding.UTF8.GetChars(_UTF8QuadBytes).FirstOrDefault()); // hack
+                    else
+                        charList.Add(Encoding.BigEndianUnicode.GetChars(_UTF8QuadBytes).FirstOrDefault()); // hack                        
+
+                    i += 3;
+                    j += 3;
+                    // UTF-8 4 bytes char workaround. tfw best practice :p
+                }
             }
 
             return new string(charList.ToArray<char>());            
