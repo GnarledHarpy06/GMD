@@ -53,6 +53,28 @@ namespace GMD.ViewModels
             return (BitConverter.IsLittleEndian)
                 ? Encoding.UTF8.GetString(self)
                 : Encoding.BigEndianUnicode.GetString(self);
+
+            // Constantly checking Endianness is not efficient,
+            // will leave it here but wont implement it
+        }        
+
+        public static byte[] GetBytes(string _string)
+        {
+            return (BitConverter.IsLittleEndian)
+                ? Encoding.UTF8.GetBytes(_string)
+                : Encoding.BigEndianUnicode.GetBytes(_string);
+
+            // Constantly checking Endianness is not efficient,
+            // will leave it here but wont implement it
+        }
+
+        public static byte[] GetBytes(char[] charArray)
+        {
+            return (BitConverter.IsLittleEndian)
+                ? Encoding.UTF8.GetBytes(charArray)
+                : Encoding.BigEndianUnicode.GetBytes(charArray);
+
+            // The same goes here :)            
         }
 
         public static UInt64 GetUInt64(string Uint64Str)
@@ -103,20 +125,6 @@ namespace GMD.ViewModels
             }
             else
                 return BitConverter.ToUInt64(tmp, 0);
-        }
-
-        public static byte[] GetBytes(string _string)
-        {
-            return (BitConverter.IsLittleEndian)
-                ? Encoding.UTF8.GetBytes(_string)
-                : Encoding.BigEndianUnicode.GetBytes(_string);
-        }
-
-        public static byte[] GetBytes(char[] charArray)
-        {
-            return (BitConverter.IsLittleEndian)
-                ? Encoding.UTF8.GetBytes(charArray)
-                : Encoding.BigEndianUnicode.GetBytes(charArray);
         }
 
         static public WordStrByBookName[] GetWordStrsByBookName(this WordStrsIndex self, string bookName)

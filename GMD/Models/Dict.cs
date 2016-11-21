@@ -273,13 +273,28 @@ namespace GMD.Models
                 offsetLength = 4;
 
             int pointer = 0;
-            for (int i = 0; i < this.WordCount; i++)
-            {
-                int pointer2 = idxStr.Locate(0x00, pointer);
-                byte[] wordStrByteArray = idxStr.SubsByteArray(pointer, pointer2 - pointer);
-                arrayOfKeywords[i] = DataConversion.GetString(wordStrByteArray);
 
-                pointer += wordStrByteArray.Length + offsetLength + 4 + 1;
+            if (BitConverter.IsLittleEndian)
+            {
+                for (int i = 0; i < this.WordCount; i++)
+                {
+                    int pointer2 = idxStr.Locate(0x00, pointer);
+                    byte[] wordStrByteArray = idxStr.SubsByteArray(pointer, pointer2 - pointer);
+                    arrayOfKeywords[i] = Encoding.UTF8.GetString(wordStrByteArray);
+
+                    pointer += wordStrByteArray.Length + offsetLength + 4 + 1;
+                }
+            }
+            else
+            {
+                for (int i = 0; i < this.WordCount; i++)
+                {
+                    int pointer2 = idxStr.Locate(0x00, pointer);
+                    byte[] wordStrByteArray = idxStr.SubsByteArray(pointer, pointer2 - pointer);
+                    arrayOfKeywords[i] = Encoding.BigEndianUnicode.GetString(wordStrByteArray);
+
+                    pointer += wordStrByteArray.Length + offsetLength + 4 + 1;
+                }
             }
             return arrayOfKeywords;
         }
