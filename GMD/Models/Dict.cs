@@ -35,7 +35,7 @@ namespace GMD.Models
         public int synWordCount { get; private set; } // unsupported
         public idxOffsetBitsEnum idxOffsetBits { get; private set; }
         public string dictType { get; private set; }
-        public string sameTypeSequence { get; private set; }
+        public TypeSequenceEnum sameTypeSequence { get; private set; }
 
         public string ifoPath { get; private set; }
         public string dictPath { get; private set; }
@@ -52,6 +52,24 @@ namespace GMD.Models
         {
             Uint32,
             Uint64
+        }
+
+        public enum TypeSequenceEnum
+        {
+            m,
+            l,
+            g,
+            t,
+            x,
+            y,
+            k,
+            w,
+            h,
+            n,
+            r,
+            W,
+            P,
+            X
         }
 
         public Dict() { }
@@ -157,7 +175,56 @@ namespace GMD.Models
             try { Date = getStringValue(lines, "date"); }
             catch { }
 
-            try { sameTypeSequence = getStringValue(lines, "sametypesequence"); }
+            try
+            {
+                char chr = getStringValue(lines, "sametypesequence").FirstOrDefault();
+                switch (chr)
+                {
+                    case 'm':
+                        sameTypeSequence = TypeSequenceEnum.m;
+                        break;
+                    case 'l':
+                        sameTypeSequence = TypeSequenceEnum.l;
+                        break;
+                    case 'g':
+                        sameTypeSequence = TypeSequenceEnum.g;
+                        break;
+                    case 't':
+                        sameTypeSequence = TypeSequenceEnum.t;
+                        break;
+                    case 'x':
+                        sameTypeSequence = TypeSequenceEnum.x;
+                        break;
+                    case 'y':
+                        sameTypeSequence = TypeSequenceEnum.y;
+                        break;
+                    case 'k':
+                        sameTypeSequence = TypeSequenceEnum.k;
+                        break;
+                    case 'w':
+                        sameTypeSequence = TypeSequenceEnum.w;
+                        break;
+                    case 'h':
+                        sameTypeSequence = TypeSequenceEnum.h;
+                        break;
+                    case 'n':
+                        sameTypeSequence = TypeSequenceEnum.n;
+                        break;
+                    case 'r':
+                        sameTypeSequence = TypeSequenceEnum.r;
+                        break;
+                    case 'W':
+                        sameTypeSequence = TypeSequenceEnum.W;
+                        break;
+                    case 'P':
+                        sameTypeSequence = TypeSequenceEnum.P;
+                        break;
+                    case 'X':                        
+                    default:
+                        sameTypeSequence = TypeSequenceEnum.X;
+                        break;
+                }
+            }
             catch { }
 
             try { dictType = getStringValue(lines, "dicttype"); }

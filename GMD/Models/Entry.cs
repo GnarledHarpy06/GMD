@@ -82,17 +82,11 @@ namespace GMD.Models
 
                 string charString = DataConversion.GetString(buffer);
 
-                var paragraphs = charString.Split('\n');
                 Definition = new ObservableCollection<Paragraph>();
+                Paragraph[] paragraphs = DataConversion.FormatDefinition(charString, entryDict.sameTypeSequence);
 
-                foreach(string paragraph in paragraphs)
-                {
-                    Run run = new Run();
-                    Paragraph newParagraph = new Paragraph();
-                    run.Text = paragraph;
-                    newParagraph.Inlines.Add(run);
-                    Definition.Add(newParagraph);
-                }
+                foreach (Paragraph paragraph in paragraphs)                
+                    Definition.Add(paragraph);                
             }
         }
 

@@ -4,11 +4,50 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.UI.Xaml.Documents;
 
 namespace GMD.ViewModels
 {
     static class DataConversion
     {
+        public static Paragraph[] FormatDefinition(string definition, Dict.TypeSequenceEnum typeSqc)
+        {
+            string[] formattedDefinition;
+
+            switch (typeSqc)
+            {
+                case Dict.TypeSequenceEnum.m:
+                case Dict.TypeSequenceEnum.l:
+                    formattedDefinition = definition.Split('\n');
+                    break;
+                case Dict.TypeSequenceEnum.g:                    
+                case Dict.TypeSequenceEnum.t:                    
+                case Dict.TypeSequenceEnum.x:                    
+                case Dict.TypeSequenceEnum.y:                    
+                case Dict.TypeSequenceEnum.k:                    
+                case Dict.TypeSequenceEnum.w:
+                case Dict.TypeSequenceEnum.h:
+                case Dict.TypeSequenceEnum.n:
+                case Dict.TypeSequenceEnum.r:
+                case Dict.TypeSequenceEnum.W:
+                case Dict.TypeSequenceEnum.P:
+                case Dict.TypeSequenceEnum.X:                
+                default:
+                    formattedDefinition = new string[] { "Sorry the data couldn't be formated correctly", definition };
+                    break;
+
+            }
+
+            Paragraph[] paragraphs = new Paragraph[formattedDefinition.Count()];
+            for (int i = 0; i < formattedDefinition.Count(); i++)
+            {
+                paragraphs[i] = new Paragraph();
+                paragraphs[i].Inlines.Add(new Run() { Text = formattedDefinition[i] });
+            }
+
+            return paragraphs;
+        }
+
         public static string GetString(byte[] self)
         {
             List<char> charList = new List<char>();
@@ -18,11 +57,13 @@ namespace GMD.ViewModels
             {
                 if ((self[i] & 0x80) == 0x80)
                 {
-                    byte[] _UTF16Char = new byte[2] { self[i], self[i + 1] };
+                    byte[] _UTF16Char = new byte[] { self[i], self[i + 1] };
+                    
                     if (BitConverter.IsLittleEndian)
-                        Array.Reverse(_UTF16Char);
+                        charList.Add(Encoding.UTF8.GetChars(_UTF16Char).FirstOrDefault()); // hack
+                    else
+                        charList.Add(Encoding.BigEndianUnicode.GetChars(_UTF16Char).FirstOrDefault()); // hack                        
 
-                    charList.Add(BitConverter.ToChar(_UTF16Char, 0));
                     i++;
                     j++;
                     // UTF16 workaround. tfw best practice :p
@@ -31,7 +72,7 @@ namespace GMD.ViewModels
                     charList.Add(BitConverter.ToChar(new byte[2] { self[i], 0 }, 0));
             }
 
-            return new string(charList.ToArray<char>());
+            return new string(charList.ToArray<char>());            
         }
 
         public static UInt64 GetUInt64(string Uint64Str)
@@ -92,10 +133,20 @@ namespace GMD.ViewModels
             {
                 byte[] chrTmp = new byte[2];
                 chrTmp = BitConverter.GetBytes(chr);
+                
+                if ((chrTmp[0] & 0x80) != 0x80)
+                    tmp.Add(chrTmp[0]);
+                else
+                {
+                    byte[] bytes;
+                    if (BitConverter.IsLittleEndian)
+                        bytes = Encoding.UTF8.GetBytes(new char[] { chr });
+                    else
+                        bytes = Encoding.BigEndianUnicode.GetBytes(new char[] { chr });
 
-                tmp.Add(chrTmp[0]);
-                if ((chrTmp[0] & 0x80) == 0x80)
-                    tmp.Add(chrTmp[1]);                
+                    foreach (byte _byte in bytes)
+                        tmp.Add(_byte);
+                }
             }
             return tmp.ToArray<byte>();
         }
