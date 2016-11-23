@@ -59,6 +59,12 @@ namespace GMD.ViewModels
         {
             var dicts = connection.Table<Dict>().Where(p => p.IsQueried);
             var wordStrDBIndexes = connection.Table<WordStrDBIndex>().ToArray();
+
+            if(wordStrDBIndexes.Count() < 1)
+            {
+                arrayOfAllQueriedWordStrsIndex = new WordStrsIndex[0];
+                return;
+            }
             WordStrsIndex[] arrayOfWordStrsIndexes = new WordStrsIndex[dicts.Max(p => p.DictID) + 1];
 
             foreach(Dict dict in dicts)
@@ -118,6 +124,8 @@ namespace GMD.ViewModels
 
         public void QueryKeywords(string keyword)
         {
+            if (arrayOfAllQueriedWordStrsIndex == null)
+                return;
             CollectionMatchedOfKeywordsByBookName.Clear();
 
             int pointer = 0;

@@ -140,6 +140,8 @@ namespace GMD.ViewModels
             await folderToDelete.DeleteAsync();
 
             connection.Delete<Dict>(dictID);
+            connection.Table<WordStrDBIndex>().Delete(p => p.DictId == dictID);
+                        
             RaiseDictDatabaseChanged("Removed");
         }
 

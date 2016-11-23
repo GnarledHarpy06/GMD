@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Documents;
 
@@ -12,42 +13,50 @@ namespace GMD.ViewModels
     {
         public static Paragraph[] FormatDefinition(string definition, Dict.TypeSequenceEnum typeSqc)
         {
-            string[] formattedDefinition;
+            List<Paragraph> formattedDefinition = new List<Paragraph>();
 
             switch (typeSqc)
             {
                 case Dict.TypeSequenceEnum.m:
                 case Dict.TypeSequenceEnum.l:
-                    formattedDefinition = definition.Split('\n');
+                    var unformattedDefinition = definition.Split('\n');
+                    foreach (string line in unformattedDefinition)
+                    {
+                        Paragraph p = new Paragraph();
+                        p.Inlines.Add(new Run() { Text = line });
+                        formattedDefinition.Add(p);
+                    }
                     break;
-                case Dict.TypeSequenceEnum.g:                    
+                case Dict.TypeSequenceEnum.h:
+                case Dict.TypeSequenceEnum.g:
+                case Dict.TypeSequenceEnum.x:
+                    var h = Properties.GenerateBlocksForHtml(definition);
+                    foreach (Paragraph p in h)
+                        formattedDefinition.Add(p);
+                    break;
                 case Dict.TypeSequenceEnum.t:                    
-                case Dict.TypeSequenceEnum.x:                    
                 case Dict.TypeSequenceEnum.y:                    
                 case Dict.TypeSequenceEnum.k:                    
                 case Dict.TypeSequenceEnum.w:
-                case Dict.TypeSequenceEnum.h:
                 case Dict.TypeSequenceEnum.n:
                 case Dict.TypeSequenceEnum.r:
                 case Dict.TypeSequenceEnum.W:
                 case Dict.TypeSequenceEnum.P:
                 case Dict.TypeSequenceEnum.X:                
                 default:
-                    formattedDefinition = new string[] { "Sorry the data couldn't be formated correctly", definition };
+                    unformattedDefinition = new string[] { "Sorry the data couldn't be formated correctly", "\n" , definition };
+                    foreach (string line in unformattedDefinition)
+                    {
+                        Paragraph p = new Paragraph();
+                        p.Inlines.Add(new Run() { Text = line });
+                        formattedDefinition.Add(p);
+                    }
                     break;
-
             }
 
-            Paragraph[] paragraphs = new Paragraph[formattedDefinition.Count()];
-            for (int i = 0; i < formattedDefinition.Count(); i++)
-            {
-                paragraphs[i] = new Paragraph();
-                paragraphs[i].Inlines.Add(new Run() { Text = formattedDefinition[i] });
-            }
-
-            return paragraphs;
-        }
-
+            return formattedDefinition.ToArray();
+        }        
+        
         public static string GetString(byte[] self)
         {
             return (BitConverter.IsLittleEndian)
@@ -216,7 +225,7 @@ namespace GMD.ViewModels
             return -1;
         }
 
-        public static int[] LocateAny(this byte[] self, byte[] candidate)
+        public static int[] LocateAll(this byte[] self, byte[] candidate)
         {
             if (IsEmptyLocate(self, candidate))
                 return Empty;
@@ -234,13 +243,34 @@ namespace GMD.ViewModels
             return list.Count == 0 ? Empty : list.ToArray();
         }
 
-        public static int[] LocateAny(this byte[] self, byte candidate)
+        public static int[] LocateAll(this byte[] self, byte candidate)
         {
             var list = new List<int>();
 
             for (int i = 0; i < self.Length; i++)
             {
                 if (self[i] != candidate)
+                    continue;
+
+                list.Add(i);
+            }
+
+            return list.Count == 0 ? Empty : list.ToArray();
+        }
+
+        public static int[] LocateAll(this string self, string candidate)
+        {
+            var selfArray = self.ToCharArray();
+            var candidateArray = candidate.ToCharArray();
+
+            if (IsEmptyLocate(selfArray, candidateArray))
+                return Empty;
+
+            var list = new List<int>();
+
+            for (int i = 0; i < self.Length; i++)
+            {
+                if (!IsMatch(selfArray, i, candidateArray))
                     continue;
 
                 list.Add(i);
@@ -261,7 +291,28 @@ namespace GMD.ViewModels
             return true;
         }
 
+        static bool IsMatch(char[] array, int position, char[] candidate)
+        {
+            if (candidate.Length > (array.Length - position))
+                return false;
+
+            for (int i = 0; i < candidate.Length; i++)
+                if (array[position + i] != candidate[i])
+                    return false;
+
+            return true;
+        }
+
         static bool IsEmptyLocate(byte[] array, byte[] candidate)
+        {
+            return array == null
+                || candidate == null
+                || array.Length == 0
+                || candidate.Length == 0
+                || candidate.Length > array.Length;
+        }
+
+        static bool IsEmptyLocate(char[] array, char[] candidate)
         {
             return array == null
                 || candidate == null

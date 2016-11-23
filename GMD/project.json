@@ -1,5 +1,6 @@
 ﻿{
   "dependencies": {
+    "HtmlAgilityPack": "1.4.9.5",
     "Microsoft.NETCore.UniversalWindowsPlatform": "5.2.2",
     "sharpcompress": "0.14.0",
     "SQLite.Net-PCL": "3.1.1"
