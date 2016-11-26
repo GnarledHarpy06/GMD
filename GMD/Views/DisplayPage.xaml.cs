@@ -24,23 +24,29 @@ namespace GMD.Views
     /// </summary>
     public sealed partial class DisplayPage : Page
     {
-        private DisplayEntry DisplayedEntry = new DisplayEntry();
+        private DisplayEntry DisplayedEntry = App.CurrentEntry;
 
         public DisplayPage()
         {
             this.InitializeComponent();
-            App.CurrentEntry.PropertyChanged += (s, e) => this.DisplayedEntry.UpdateEntry(App.CurrentEntry);
-            DisplayedEntry.PropertyChanged += (s, e) => this.FollowUpRebind();
-        }
+            FollowUpRebind();
+            DisplayedEntry.PropertyChanged += (s, e) => this.FollowUpRebind();            
+        }        
         
         void FollowUpRebind()
         {
-            Bindings.Update();
-
             EntryDefinitionRichTextBlock.Blocks.Clear();
-            foreach (Paragraph p in this.DisplayedEntry.Definition)
-                EntryDefinitionRichTextBlock.Blocks.Add(p);
+
+            foreach (var item in DisplayedEntry.Definition)
+                EntryDefinitionRichTextBlock.Blocks.Add(item);
+
+            Bindings.Update();
             // tfw best practice :p
+        }
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            
         }
     }
 }

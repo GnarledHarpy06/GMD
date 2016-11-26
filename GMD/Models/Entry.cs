@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.ComponentModel;
-using System.Collections.ObjectModel;
+using System.Collections.Generic;
 using Windows.UI.Xaml.Documents;
 
 namespace GMD.Models
@@ -55,7 +55,7 @@ namespace GMD.Models
         {
             BookName = "GMD Modular Dictionary";
             WordStr = "WELCOME MY DEAR";
-            Definition = new ObservableCollection<Paragraph>();
+            Definition = new List<Paragraph>();
             var p = new Paragraph();
             p.Inlines.Add(new Run { Text = "Start by entering keyword in the text box" });
             Definition.Add(p);
@@ -82,7 +82,7 @@ namespace GMD.Models
 
                 string charString = DataConversion.GetString(buffer);
 
-                Definition = new ObservableCollection<Paragraph>();
+                Definition = new List<Paragraph>();
                 Paragraph[] paragraphs = DataConversion.FormatDefinition(charString, entryDict.sameTypeSequence);
 
                 foreach (Paragraph paragraph in paragraphs)                
@@ -122,7 +122,7 @@ namespace GMD.Models
         }
 
         public string BookName { get; set; }
-        public ObservableCollection<Paragraph> Definition { get; set; }
+        public List<Paragraph> Definition { get; set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
 

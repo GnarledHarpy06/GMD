@@ -205,6 +205,46 @@ namespace GMD.ViewModels
             return -1;
         }
 
+        public static int QueryLocate64(this byte[] self, byte[] candidate, int startPos)
+        {
+            if (IsEmptyLocate(self, candidate))
+                return -1;
+
+            for (int i = startPos; i < self.Length; i++)
+                try
+                {
+                    if (IsMatch(self, i, candidate) && ((self[i - 13] == 0x00) || i == 0))
+                        return i;
+                }
+                catch (IndexOutOfRangeException)
+                {
+                    if (IsMatch(self, i, candidate) && i == 0)
+                        return i;
+                }
+
+            return -1;
+        }
+
+        public static int QueryLocate32(this byte[] self, byte[] candidate, int startPos)
+        {
+            if (IsEmptyLocate(self, candidate))
+                return -1;
+
+            for (int i = startPos; i < self.Length; i++)
+                try
+                {
+                    if (IsMatch(self, i, candidate) && ((self[i - 9] == 0x00) || i == 0))
+                        return i;
+                }
+                catch(IndexOutOfRangeException)
+                {
+                    if(IsMatch(self, i, candidate) &&  i == 0)
+                        return i;
+                }                
+
+            return -1;
+        }
+
         public static int Locate(this byte[] self, byte candidate)
         {
             for (int i = 0; i < self.Length; i++)
@@ -223,7 +263,7 @@ namespace GMD.ViewModels
                     return i;
             }
             return -1;
-        }
+        }        
 
         public static int[] LocateAll(this byte[] self, byte[] candidate)
         {

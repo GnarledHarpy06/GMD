@@ -29,11 +29,13 @@ namespace GMD.Views
         {
             this.InitializeComponent();
             QueryListView.ItemsSource = App.EntriesManager.CollectionMatchedOfKeywordsByBookName;
+            DetailFrame.Navigate(typeof(DisplayPage));
         }
 
         private void QueryTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            App.EntriesManager.QueryKeywords(QueryTextBox.Text);
+            if(QueryTextBox.Text != "")
+                App.EntriesManager.QueryKeywords(QueryTextBox.Text);
         }
         
         private void SearchPage_Loaded(object sender, RoutedEventArgs e)
@@ -42,14 +44,38 @@ namespace GMD.Views
             App.EntriesManager.ConstructAsync();
             // tfw best practice :p
         }
-
-        private void QueryListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+                
+        private void AdaptiveStates_CurrentStateChanged(object sender, VisualStateChangedEventArgs e)
         {
-            if(QueryListView.SelectedItem != null)
+            //if(e.NewState == NarrowState)
+            //{
+            //    MasterColumn.Width = new GridLength(1, GridUnitType.Star);
+            //    DetailColumn.Width = new GridLength(0, GridUnitType.Star);
+            //    SearchPageHeaderTextBlock.Margin = new Thickness(56, 8, 8, 8);
+            //}
+            //else if (e.NewState == DefaultState)
+            //{
+            //    MasterColumn.Width = new GridLength(320, GridUnitType.Pixel);
+            //    DetailColumn.Width = new GridLength(1, GridUnitType.Star);
+            //    SearchPageHeaderTextBlock.Margin = new Thickness(8, 8, 8, 8);
+            //}
+        }        
+
+        private void QueryListView_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            App.CurrentEntry.UpdateEntry(App.EntriesManager.GetEntry((WordStrByBookName)e.ClickedItem));
+            if (AdaptiveStates.CurrentState == NarrowState)
             {
-                App.CurrentEntry.UpdateEntry(App.EntriesManager.GetEntry((WordStrByBookName)QueryListView.SelectedItem));               
+                VisualStateManager.GoToState(this, DetailState.Name, true);
+
+                Windows.UI.Core.SystemNavigationManager.GetForCurrentView().BackRequested += (s, f) =>
+                {
+                    f.Handled = true;
+                    VisualStateManager.GoToState(this, MasterState.Name, true);
+                };
             }
-        }
+            
+        }        
 
         //public delegate void EntryUpdateHandler(object sender, SearchPageEventArgs e);
         //public event EntryUpdateHandler OnCurrentEntryChanged;

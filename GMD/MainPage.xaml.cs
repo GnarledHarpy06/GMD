@@ -26,8 +26,7 @@ namespace GMD
     {
         public MainPage()
         {
-            this.InitializeComponent();
-            DisplayFrame.Navigate(typeof(DisplayPage));
+            this.InitializeComponent();            
             MenuFrame.Navigate(typeof(SearchPage));
 
             var update = new Action(() =>
@@ -41,7 +40,17 @@ namespace GMD
                         continue;
                     radioButton.IsChecked = target.Type.Equals(type);
                 }
-                HamburgerSplitView.IsPaneOpen = false;
+                switch (HamburgerSplitView.DisplayMode)
+                {
+                    case SplitViewDisplayMode.CompactOverlay:
+                    case SplitViewDisplayMode.Overlay:
+                        HamburgerSplitView.IsPaneOpen = false;
+                        break;
+                    case SplitViewDisplayMode.CompactInline:
+                    default:
+                        break;
+                        
+                }
                 // BackCommand.RaiseCanExecuteChanged();
             });
             MenuFrame.Navigated += (s, e) => update();
@@ -49,14 +58,18 @@ namespace GMD
             DataContext = this;
 
             Windows.UI.Core.SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility
-                = Windows.UI.Core.AppViewBackButtonVisibility.Visible; // this thing is not adaptive yet
-            //Windows.UI.Core.SystemNavigationManager.GetForCurrentView().BackRequested += OnHardwareButtonsBackPressed;
-
+                = Windows.UI.Core.AppViewBackButtonVisibility.Visible;
 
             Windows.UI.Core.SystemNavigationManager.GetForCurrentView().BackRequested += (s, e) =>
             {
                 if (MenuFrame.CanGoBack)
-                    MenuFrame.GoBack();
+                {
+                    if (!e.Handled)
+                    {
+                        e.Handled = true;
+                        MenuFrame.GoBack();
+                    }                    
+                }
             };
         }
 
@@ -107,7 +120,12 @@ namespace GMD
         {
             // don't let the radiobutton check
             (s as RadioButton).IsChecked = false;
-        }        
+        }
+
+        private void AdaptiveStates_CurrentStateChanged(object sender, VisualStateChangedEventArgs e)
+        {
+
+        }
     }
 
     public class NavType

@@ -112,8 +112,20 @@ namespace GMD.ViewModels
                                 ExtractFullPath = true,
                                 Overwrite = true
                             });
-                        }
+                        }                        
                     }
+
+                    try
+                    {
+                        await (await StorageFolder.GetFolderFromPathAsync($@"{ApplicationData.Current.LocalFolder.Path}\{extractionFolder}\res\")).DeleteAsync();
+                    }
+                    catch (FileNotFoundException)
+                    { }
+                    catch (System.Runtime.InteropServices.COMException)
+                    { }
+                    finally
+                    { }
+                    
                 }
 
                 Dict newDict = new Dict(extractionFolder);

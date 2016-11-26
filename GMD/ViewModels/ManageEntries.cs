@@ -15,7 +15,7 @@ namespace GMD.ViewModels
 {
     public class ManageEntries
     {
-        private byte[][] arrayOfAllQueriedIdxByteArray;
+        private byte[][] arrayOfAllQueriedIdxByteArray;        
         private WordStrsIndex[] arrayOfAllQueriedWordStrsIndex;
         public ObservableCollection<WordStrByBookName> CollectionMatchedOfKeywordsByBookName = 
             new ObservableCollection<WordStrByBookName>();
@@ -122,11 +122,103 @@ namespace GMD.ViewModels
             };                        
         }
 
+        public void QueryKeywords2(string keyword)
+        {
+            /* A failed attempt to optimize query
+            */
+
+            if (arrayOfAllQueriedWordStrsIndex == null)
+                return;
+            var keywordByteArray = DataConversion.GetBytes(keyword);
+            List<WordStrByBookName> listWSBK = new List<WordStrByBookName>();
+
+            for (int i = 0; i < arrayOfAllQueriedIdxByteArray.Count(); i++)
+            {
+                if(arrayOfAllQueriedIdxByteArray[i] != null)
+                {
+                    string[] arrayOfKeywords = new string[50];
+
+                    int offsetLength;
+                    string bookName = connection.Get<Dict>(i).BookName;
+                    if (connection.Get<Dict>(i).idxOffsetBits == Dict.idxOffsetBitsEnum.Uint64)
+                        offsetLength = 8;
+                    else
+                        offsetLength = 4;
+
+                    int pointer = 0;
+
+                    if (BitConverter.IsLittleEndian && offsetLength == 4)
+                    {
+                        for (int j = 0; i < 50; j++)
+                        {
+                            int pointer2 = arrayOfAllQueriedIdxByteArray[i].QueryLocate32(keywordByteArray, pointer);
+                            if (pointer2 == -1) break;
+                            int pointer3 = arrayOfAllQueriedIdxByteArray[i].Locate(0x00, pointer2);
+
+                            byte[] wordStrByteArray = arrayOfAllQueriedIdxByteArray[i].SubsByteArray(pointer2, pointer3);
+                            arrayOfKeywords[j] = Encoding.UTF8.GetString(wordStrByteArray);
+
+                            pointer = pointer3 + offsetLength + 4 + 1;
+                        }
+                    }
+                    else if (BitConverter.IsLittleEndian && offsetLength == 8)
+                    {
+                        for (int j = 0; i < 50; j++)
+                        {
+                            int pointer2 = arrayOfAllQueriedIdxByteArray[i].QueryLocate64(keywordByteArray, pointer);
+                            if (pointer2 == -1) break;
+                            int pointer3 = arrayOfAllQueriedIdxByteArray[i].Locate(0x00, pointer2);
+
+                            byte[] wordStrByteArray = arrayOfAllQueriedIdxByteArray[i].SubsByteArray(pointer2, pointer3);
+                            arrayOfKeywords[j] = Encoding.UTF8.GetString(wordStrByteArray);
+
+                            pointer = pointer3 + offsetLength + 8 + 1;
+                        }
+                    }
+                    else if(!BitConverter.IsLittleEndian && offsetLength == 4)
+                    {
+                        for (int j = 0; i < 50; i++)
+                        {
+                            int pointer2 = arrayOfAllQueriedIdxByteArray[i].QueryLocate32(keywordByteArray, pointer);
+                            if (pointer2 == -1) break;
+                            int pointer3 = arrayOfAllQueriedIdxByteArray[i].Locate(0x00, pointer2);
+
+                            byte[] wordStrByteArray = arrayOfAllQueriedIdxByteArray[i].SubsByteArray(pointer2, pointer3);
+                            arrayOfKeywords[j] = Encoding.BigEndianUnicode.GetString(wordStrByteArray);
+
+                            pointer = pointer3 + offsetLength + 4 + 1;
+                        }
+                    }
+                    else
+                    {
+                        for (int j = 0; i < 50; i++)
+                        {
+                            int pointer2 = arrayOfAllQueriedIdxByteArray[i].QueryLocate64(keywordByteArray, pointer);
+                            if (pointer2 == -1) break;
+                            int pointer3 = arrayOfAllQueriedIdxByteArray[i].Locate(0x00, pointer2);
+
+                            byte[] wordStrByteArray = arrayOfAllQueriedIdxByteArray[i].SubsByteArray(pointer2, pointer3);
+                            arrayOfKeywords[j] = Encoding.BigEndianUnicode.GetString(wordStrByteArray);
+
+                            pointer = pointer3 + offsetLength + 8 + 1;
+                        }
+                    }
+
+                    foreach (var item in arrayOfKeywords.Where(p => p != null).ToArray())
+                        listWSBK.Add(new WordStrByBookName() { WordStr = item, BookName = bookName });
+                }
+            }
+            listWSBK.Sort();            
+            foreach (var item in listWSBK)
+                CollectionMatchedOfKeywordsByBookName.Add(item);
+            CollectionMatchedOfKeywordsByBookName.Clear();
+        }
+
         public void QueryKeywords(string keyword)
         {
             if (arrayOfAllQueriedWordStrsIndex == null)
                 return;
-            CollectionMatchedOfKeywordsByBookName.Clear();
+            CollectionMatchedOfKeywordsByBookName.Clear();            
 
             int pointer = 0;
             foreach(WordStrsIndex WordStrsIndex in arrayOfAllQueriedWordStrsIndex)
@@ -198,8 +290,8 @@ namespace GMD.ViewModels
             string[] queriedWordStrs = this.WordStrs.Where(p => p.IndexOf(keyword) == 0).ToArray();
 
             int minItems;
-            if (queriedWordStrs.Count() > 50)
-                minItems = 50;
+            if (queriedWordStrs.Count() > 30)
+                minItems = 30;
             else
                 minItems = queriedWordStrs.Count();
             string[] filteredWordStrs = new string[minItems];

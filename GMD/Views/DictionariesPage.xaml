@@ -24,6 +24,28 @@
     </Page.Resources>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="AdaptiveStates" CurrentStateChanged="AdaptiveStates_CurrentStateChanged">
+                <VisualState x:Name="DefaultState">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="720" />
+                    </VisualState.StateTriggers>
+                </VisualState>
+                <VisualState x:Name="NarrowState">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="DictionaryPageHeaderTextBlock.Margin">
+                            <Setter.Value>
+                                <Thickness>56,8,8,8</Thickness>
+                            </Setter.Value>
+                        </Setter>
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition />
@@ -31,7 +53,7 @@
 
         <CommandBar Grid.Row="0">
             <CommandBar.Content>
-                <TextBlock Name="DictionaryPageHeaderTextBlock"
+                <TextBlock x:Name="DictionaryPageHeaderTextBlock"
                            Text="Dictionary"
                            Margin="8"
                            Style="{StaticResource TitleText}"/>
@@ -49,39 +71,49 @@
         
         <ListView Name="DictionaryListView"                  
                   Grid.Row="1"
-                  SelectionChanged="DictionaryListView_SelectionChanged">            
+                  SelectionChanged="DictionaryListView_SelectionChanged"
+                  HorizontalAlignment="Stretch"
+                  ItemsSource="{x:Bind localDicts}">
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="models:Dict">
-                    <Grid HorizontalAlignment="Stretch"
-                          VerticalAlignment="Stretch">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>                        
-                        <TextBlock Name="BookNameTextBlock"                                    
-                                   Grid.Row="0"
+                    <StackPanel HorizontalAlignment="Stretch">
+                        <TextBlock Name="BookNameTextBlock"
+                                   HorizontalAlignment="Stretch"
                                    Style="{StaticResource HeaderText}"
+                                   TextTrimming="CharacterEllipsis"
+                                   TextWrapping="NoWrap"
                                    Text="{x:Bind BookName}"/>
-                        <RelativePanel Grid.Row="1">
-                            <StackPanel Orientation="Horizontal"
-                                        RelativePanel.AlignLeftWithPanel="True">
+                    <Grid>
+                            <StackPanel Orientation="Horizontal"                                        
+                                        HorizontalAlignment="Left">
+                                <TextBlock FontFamily="Segoe MDL2 Assets"
+                                           Text="&#xE8C1;"
+                                           Margin="4"/>
                                 <TextBlock Name="WordCountTextBlock" 
                                            Style="{StaticResource CaptionText}"
-                                           Text="{x:Bind WordCount}"/>
-                                <TextBlock Text="words"
+                                           Text="{x:Bind WordCount}"
+                                           Margin="0,4"/>
+                                <TextBlock Text="entries"
+                                           Margin="4"
                                            Style="{StaticResource CaptionText}" />
                             </StackPanel>
-                            <StackPanel Orientation="Horizontal"
-                                        RelativePanel.AlignRightWithPanel="True">
+                            <StackPanel Orientation="Horizontal"                                        
+                                        HorizontalAlignment="Right">
+                                <TextBlock FontFamily="Segoe MDL2 Assets"
+                                           Text="&#xE152;"
+                                           Margin="4"/>
                                 <TextBlock Name="FileSizeTextBlock" 
-                                       HorizontalAlignment="Right"
-                                       Style="{StaticResource CaptionText}"
-                                       Text="{x:Bind DictSize}"/>
+                                           HorizontalAlignment="Right"
+                                           Style="{StaticResource CaptionText}"
+                                           Text="{x:Bind DictSize}"
+                                           Margin="0,4"/>
                                 <TextBlock Text="bytes"
+                                           Margin="4"
                                            Style="{StaticResource CaptionText}" />
                             </StackPanel>
-                        </RelativePanel>
+                    
                     </Grid>
+                    </StackPanel>
                 </DataTemplate>
             </ListView.ItemTemplate>
             

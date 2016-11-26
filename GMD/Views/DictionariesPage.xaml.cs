@@ -26,11 +26,21 @@ namespace GMD.Views
     /// </summary>
     public sealed partial class DictionariesPage : Page
     {
+        ObservableCollection<Dict> localDicts = new ObservableCollection<Dict>();
+
         public DictionariesPage()
         {
             this.InitializeComponent();
-            DictionaryListView.ItemsSource = App.DictsManager.Dicts;
-        }        
+            UpdateDictionary();
+            App.DictsManager.DictDatabaseChanged += (s, e) => UpdateDictionary();            
+        }
+
+        private void UpdateDictionary()
+        {
+            localDicts.Clear();
+            foreach (Dict newDict in App.DictsManager.Dicts)
+                localDicts.Add(newDict);
+        }
 
         private void AddDictAppBarButton_Click(object sender, RoutedEventArgs e)
         {
@@ -55,6 +65,11 @@ namespace GMD.Views
                 RemoveDictAppBarButton.IsEnabled = true;
             else
                 RemoveDictAppBarButton.IsEnabled = false;
+        }        
+
+        private void AdaptiveStates_CurrentStateChanged(object sender, VisualStateChangedEventArgs e)
+        {
+            
         }
     }
 }

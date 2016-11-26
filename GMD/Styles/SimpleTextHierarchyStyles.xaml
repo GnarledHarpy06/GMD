@@ -1,6 +1,6 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">    
 
     <Style x:Key="HeaderText" TargetType="TextBlock" BasedOn="{StaticResource HeaderTextBlockStyle}" />
     <Style x:Key="SubheaderText" TargetType="TextBlock" BasedOn="{StaticResource SubheaderTextBlockStyle}" />
@@ -8,6 +8,46 @@
     <Style x:Key="SubtitleText" TargetType="TextBlock" BasedOn="{StaticResource SubtitleTextBlockStyle}" />
     <Style x:Key="BaseText" TargetType="TextBlock" BasedOn="{StaticResource BaseTextBlockStyle}" />
     <Style x:Key="BodyText" TargetType="TextBlock" BasedOn="{StaticResource BodyTextBlockStyle}" />
-    <Style x:Key="CaptionText" TargetType="TextBlock" BasedOn="{StaticResource CaptionTextBlockStyle}" />
+    <Style x:Key="CaptionText" TargetType="TextBlock" BasedOn="{StaticResource CaptionTextBlockStyle}" />    
+
+    <!--<Style TargetType="TextBlock" x:Key="PageHeaderTextBlock" BasedOn="{StaticResource TitleTextBlockStyle}">
+        <Setter Property="Margin">
+            <Setter.Value>
+                <ControlTemplate>
+                    <TextBlock Margin="{TemplateBinding Margin}" >
+                        <VisualStateManager.VisualStateGroups>
+                        <VisualStateGroup x:Name="AdaptiveStates">
+                            <VisualState x:Name="DefaultState">
+                                <VisualState.StateTriggers>
+                                    <AdaptiveTrigger MinWindowWidth="720" />
+                                </VisualState.StateTriggers>
+                                <VisualState.Setters>
+                                    <Setter Property="Margin" >
+                                        <Setter.Value>
+                                            <Thickness>8</Thickness>
+                                        </Setter.Value>
+                                    </Setter>
+                                </VisualState.Setters>
+                            </VisualState>
+                            <VisualState x:Name="NarrowState">
+                                <VisualState.StateTriggers>
+                                    <AdaptiveTrigger MinWindowWidth="0" />
+                                </VisualState.StateTriggers>
+                                <VisualState.Setters>
+                                    <Setter Property="Margin" >
+                                        <Setter.Value>
+                                            <Thickness>56,8,8,8</Thickness>
+                                        </Setter.Value>
+                                    </Setter>
+                                </VisualState.Setters>
+                            </VisualState>
+                        </VisualStateGroup>
+                    </VisualStateManager.VisualStateGroups>
+                    </TextBlock>
+                </ControlTemplate>
+            </Setter.Value>
+            
+        </Setter>
+    </Style>-->
 
 </ResourceDictionary>

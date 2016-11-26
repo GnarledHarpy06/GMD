@@ -24,40 +24,111 @@
         </ResourceDictionary>        
     </Page.Resources>
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition />
-            </Grid.RowDefinitions>
-            <CommandBar Grid.Row="0">
-                <CommandBar.Content>
-                    <TextBlock Text="HistoryPage"
+    <Grid x:Name="SearchPageGrid" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="AdaptiveStates" CurrentStateChanged="AdaptiveStates_CurrentStateChanged">
+                <VisualState x:Name="DefaultState">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="720" />
+                    </VisualState.StateTriggers>
+                </VisualState>
+                <VisualState x:Name="NarrowState">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="SearchPageHeaderTextBlock.Margin">
+                            <Setter.Value>
+                                <Thickness>56,8,8,8</Thickness>
+                            </Setter.Value>
+                        </Setter>
+                        <Setter Target="MasterColumn.Width">
+                            <Setter.Value>
+                                <GridLength>*</GridLength>
+                            </Setter.Value>
+                        </Setter>
+                        <Setter Target="DetailColumn.Width">
+                            <Setter.Value>
+                                <GridLength>0</GridLength>
+                            </Setter.Value>
+                        </Setter>                        
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+            <VisualStateGroup x:Name="NarrowStates">
+                <VisualState x:Name="MasterState">
+                    <VisualState.Setters>
+                        <Setter Target="MasterColumn.Width" >
+                            <Setter.Value>
+                                *                                
+                            </Setter.Value>
+                        </Setter>
+                        <Setter Target="DetailColumn.Width" >
+                            <Setter.Value>
+                                0
+                            </Setter.Value>
+                        </Setter>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="DetailState">
+                    <VisualState.Setters>
+                        <Setter Target="MasterColumn.Width" >
+                            <Setter.Value>
+                                0
+                            </Setter.Value>
+                        </Setter>
+                        <Setter Target="DetailColumn.Width" >
+                            <Setter.Value>
+                                *
+                            </Setter.Value>
+                        </Setter>
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+
+        <Grid>            
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition x:Name="MasterColumn" Width="320"/>
+                <ColumnDefinition x:Name="DetailColumn" Width="*"/>
+            </Grid.ColumnDefinitions>            
+            <Grid x:Name="MasterGrid">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <CommandBar x:Name="SearchPageCommandBar"
+                        Grid.Row="0">
+                    <CommandBar.Content>
+                        <TextBlock x:Name="SearchPageHeaderTextBlock"
+                               Text="HistoryPage"
                                Margin="8"
                                Style="{StaticResource TitleText}"/>
-                </CommandBar.Content>
-            </CommandBar>
+                    </CommandBar.Content>
+                </CommandBar>
 
-            <TextBox x:Name="QueryTextBox"
-                     FontSize="24"
+                <TextBox x:Name="QueryTextBox"
                      Grid.Row="1"
+                     FontSize="24"
+                     Margin="4"
                      HorizontalAlignment="Stretch"
-                     VerticalAlignment="Top"
-                     Height="36pt"
+                     VerticalAlignment="Stretch"
                      PlaceholderText="Search keyword"
                      TextChanged="QueryTextBox_TextChanged">
-            </TextBox>
-            <ListView x:Name="QueryListView"
+                </TextBox>
+                <ListView x:Name="QueryListView"
                       Grid.Row="2"
-                      SelectionChanged="QueryListView_SelectionChanged">
-                <ListView.ItemTemplate>
-                    <DataTemplate x:DataType="models:WordStrByBookName">
-                        <TextBlock Style="{StaticResource BodyText}"
-                                   Text="{x:Bind WordStr}"/>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-                <!--<ListView.GroupStyle>
+                      IsItemClickEnabled="True"
+                      ItemClick="QueryListView_ItemClick">
+                    <ListView.ItemTemplate>
+                        <DataTemplate x:DataType="models:WordStrByBookName">
+                            <TextBlock Style="{StaticResource BodyText}"
+                                       Text="{x:Bind WordStr}"
+                                       TextTrimming="CharacterEllipsis"/>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                    <!--<ListView.GroupStyle>
                     <GroupStyle>
                         <GroupStyle.HeaderTemplate>
                             <DataTemplate x:DataType="models:EntriesGrouping">
@@ -67,7 +138,12 @@
                         </GroupStyle.HeaderTemplate>
                     </GroupStyle>
                 </ListView.GroupStyle>-->
-            </ListView>
+                </ListView>
+            </Grid>
+            <Frame x:Name="DetailFrame"
+                   HorizontalAlignment="Stretch"
+                   Grid.Row="0"
+                   Grid.Column="1" />
         </Grid>
 
     </Grid>

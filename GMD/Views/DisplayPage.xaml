@@ -24,22 +24,26 @@
         </Grid.RowDefinitions>
         <CommandBar>
             <AppBarButton Icon="Copy"
+                          Label="Copy"
                           IsEnabled="False"/>
-            <AppBarButton IsEnabled="False">
+            <AppBarButton IsEnabled="False"
+                          Label="Favorite"                          >
                 <AppBarButton.Icon>
-                    <FontIcon FontFamily="Segoe MDL2 Assets"
+                    <FontIcon FontFamily="Segoe MDL2 Assets"                              
                               Glyph="&#xE734;" />
                 </AppBarButton.Icon>
             </AppBarButton>
-            <AppBarButton IsEnabled="False">
+            <AppBarButton IsEnabled="False"
+                          Label="Share">
                 <AppBarButton.Icon>
                     <FontIcon FontFamily="Segoe MDL2 Assets"
                               Glyph="&#xE72D;" />
                 </AppBarButton.Icon>
             </AppBarButton>
         </CommandBar>
-        <ScrollViewer Grid.Row="1"
+        <ScrollViewer Grid.Row="1"                      
                       VerticalScrollMode="Auto"
+                      VerticalScrollBarVisibility="Auto"
                       HorizontalScrollMode="Disabled">
             <Grid>
                 <Grid.RowDefinitions>
@@ -53,17 +57,28 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
-                    <TextBlock Grid.Row="0"
-                               Name="DictNameTextBlock"
-                               Text="{x:Bind DisplayedEntry.BookName}"
-                               Style="{StaticResource SubtitleText}"/>
+                    <StackPanel Orientation="Horizontal"
+                                Margin="8,8,0,0">
+                        <TextBlock Text="&#xE82D;"
+                                   FontSize="27"
+                                   FontFamily="Segoe MDL2 Assets" />
+                        <TextBlock Grid.Row="0"
+                                   Margin="8,0,0,0"
+                                   Name="DictNameTextBlock"                                   
+                                   Text="{x:Bind DisplayedEntry.BookName}"
+                                   Style="{StaticResource SubtitleText}"
+                                   TextTrimming="CharacterEllipsis"/>                        
+                    </StackPanel>
+                    
                     <TextBlock Grid.Row="1"
-                               Text="{x:Bind DisplayedEntry.WordStr}"
                                Name="EntryWordStrTextBlock"
-                               Style="{StaticResource HeaderText}"/>
+                               Margin="8,0,0,8"
+                               Text="{x:Bind DisplayedEntry.WordStr}"
+                               Style="{StaticResource HeaderText}" />
                 </Grid>
                 <RichTextBlock Grid.Row="1"
-                               x:Name="EntryDefinitionRichTextBlock">                    
+                               x:Name="EntryDefinitionRichTextBlock"
+                               Margin="12">                    
                 </RichTextBlock>
             </Grid>
         </ScrollViewer>

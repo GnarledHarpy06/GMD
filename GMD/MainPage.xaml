@@ -12,26 +12,56 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Styles/HamburgerSplitViewStyles.xaml"/>
+                <ResourceDictionary Source="/Styles/SimpleTextHierarchyStyles.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
             <Style TargetType="RadioButton" BasedOn="{StaticResource SplitViewRadioButtonStyle}" />
-
         </ResourceDictionary>
     </Page.Resources>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="AdaptiveStates" CurrentStateChanged="AdaptiveStates_CurrentStateChanged">
+                <VisualState x:Name="LargerState">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="1024" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="HamburgerSplitView.DisplayMode" Value="CompactInline" />
+                        <Setter Target="HamburgerSplitView.IsPaneOpen" Value="True" />
+                    </VisualState.Setters>
+                </VisualState>                
+                <VisualState x:Name="DefaultState">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="720" />
+                    </VisualState.StateTriggers>
+                </VisualState>
+                <VisualState x:Name="NarrowState">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="HamburgerSplitView.DisplayMode" Value="Overlay" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+
+
         <SplitView x:Name="HamburgerSplitView"
                    DisplayMode="CompactOverlay"
-                   CompactPaneLength="48">
+                   CompactPaneLength="48"
+                   HorizontalContentAlignment="Stretch">
             <SplitView.Pane>
-                <RelativePanel Background="{StaticResource SplitViewBackgroundBrush}">
+                <RelativePanel Background="{StaticResource SplitViewBackgroundBrush}"
+                               HorizontalAlignment="Stretch">
                     <TextBlock x:Name="MenuHeader"
                                RelativePanel.AlignTopWithPanel="True"
-                               FontSize="24"
-                               FontFamily="Segoe UI"
+                               Style="{StaticResource TitleText}"                               
                                Text="GMD"
                                Margin="56,8,0,8"/>
-                    <StackPanel RelativePanel.Below="MenuHeader">
+                    <StackPanel RelativePanel.Below="MenuHeader"
+                                HorizontalAlignment="Stretch">
                         <RadioButton Style="{StaticResource SplitViewRadioButtonStyle}"
                                      Command="{Binding NavCommand}"
                                      IsChecked="True"
@@ -78,9 +108,9 @@
                             </RadioButton.CommandParameter>
                             <RadioButton.Tag>
                                 <TextBlock Style="{StaticResource SplitViewTextBlockStyle}"
-                                           Text="&#xE82D;" />
+                                           Text="&#xE1D3;" />
                             </RadioButton.Tag>
-                        </RadioButton>                        
+                        </RadioButton>
                     </StackPanel>
                     <StackPanel RelativePanel.AlignBottomWithPanel="True">
                         <RadioButton Style="{StaticResource SplitViewRadioButtonStyle}"
@@ -112,20 +142,9 @@
                 </RelativePanel>
             </SplitView.Pane>
             <SplitView.Content>
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="2*" />
-                        <ColumnDefinition Width="5*"/>
-                    </Grid.ColumnDefinitions>
-                    
-                    <Frame x:Name="MenuFrame" 
-                           Grid.Column="0"
-                           CacheSize="4" />
-                    <Frame x:Name="DisplayFrame"
-                           Grid.Column="1"
-                           Grid.RowSpan="3" />
-                </Grid>
-
+                <Frame x:Name="MenuFrame" 
+                       Grid.Column="0"
+                       CacheSize="4" /> 
             </SplitView.Content>
         </SplitView>
         <Button x:Name="HamburgerMenuButton"
@@ -133,9 +152,10 @@
                 Click="HamburgerMenuButton_Click"
                 Width="48"
                 Height="48"
+                Background="{StaticResource SplitViewBackgroundBrush}"
                 Content="&#xE700;"
                 FontSize="20"
-                FontFamily="Segoe MDL2 Assets">
+                FontFamily="Segoe MDL2 Assets">            
         </Button>
     </Grid>
 </Page>
