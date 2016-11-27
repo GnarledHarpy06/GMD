@@ -2,6 +2,10 @@
 
 namespace GMD.ViewModels
 {
+    /* Most of this comes from http://blog.jerrynixon.com/2015/04/implementing-hamburger-button-with.html
+     * with very little changes by Giovan Isa Musthofa
+     */
+
     // http://codepaste.net/jgxazh
     using System.Diagnostics;
 
