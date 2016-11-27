@@ -30,6 +30,8 @@ namespace GMD
         public static ManageEntries EntriesManager = new ManageEntries();
         public static DisplayEntry CurrentEntry = new DisplayEntry();
 
+        public static DisplayEntry CurrentEntry2 = new DisplayEntry(); //FavouritePage workaround
+
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().

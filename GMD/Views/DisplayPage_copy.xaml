@@ -1,11 +1,11 @@
 ﻿<Page
-    x:Class="GMD.Views.DisplayPage"
+    x:Class="GMD.Views.DisplayPage_copy"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:GMD.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    NavigationCacheMode="Disabled"
+    NavigationCacheMode="Enabled"
     mc:Ignorable="d">
 
     <Page.Resources>
@@ -13,14 +13,14 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Styles/SimpleTextHierarchyStyles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
-            
+
         </ResourceDictionary>
     </Page.Resources>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="FavouriteAppBarToggleButtonStates" >
-                <VisualState x:Name="CheckedState">                    
+                <VisualState x:Name="CheckedState">
                     <VisualState.Setters>
                         <Setter Target="FavouriteAppBarToggleButton.Icon">
                             <Setter.Value>
@@ -30,7 +30,7 @@
                         </Setter>
                     </VisualState.Setters>
                 </VisualState>
-                <VisualState x:Name="UnCheckedState">                    
+                <VisualState x:Name="UnCheckedState">
                     <VisualState.Setters>
                         <Setter Target="FavouriteAppBarToggleButton.Icon">
                             <Setter.Value>
@@ -42,7 +42,7 @@
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
-        
+
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition />
@@ -79,9 +79,9 @@
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
-                    <RowDefinition />                    
+                    <RowDefinition />
                 </Grid.RowDefinitions>
-                
+
                 <Grid Grid.Row="0" 
                       Background="{ThemeResource InkToolbarAccentColorThemeBrush}">
                     <Grid.RowDefinitions>
@@ -98,9 +98,9 @@
                                    Name="DictNameTextBlock"                                   
                                    Text="{x:Bind DisplayedEntry.BookName}"
                                    Style="{StaticResource SubtitleText}"
-                                   TextTrimming="CharacterEllipsis"/>                        
+                                   TextTrimming="CharacterEllipsis"/>
                     </StackPanel>
-                    
+
                     <TextBlock Grid.Row="1"
                                Name="EntryWordStrTextBlock"
                                Margin="8,0,0,8"
@@ -109,7 +109,7 @@
                 </Grid>
                 <RichTextBlock Grid.Row="1"
                                x:Name="EntryDefinitionRichTextBlock"
-                               Margin="12">                    
+                               Margin="12">
                 </RichTextBlock>
             </Grid>
         </ScrollViewer>

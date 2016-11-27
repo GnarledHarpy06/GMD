@@ -10,7 +10,6 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Documents;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
@@ -22,17 +21,25 @@ namespace GMD.Views
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class DisplayPage : Page
-    {
-        private DisplayEntry DisplayedEntry = App.CurrentEntry;
+    public sealed partial class DisplayPage_copy : Page
+    {        
+        private DisplayEntry DisplayedEntry = App.CurrentEntry2;
 
-        public DisplayPage()
+        public DisplayPage_copy()
         {
-            this.InitializeComponent();
+            this.InitializeComponent();            
             FollowUpRebind();
-            DisplayedEntry.PropertyChanged += (s, e) => this.FollowUpRebind();            
-        }        
-        
+            DisplayedEntry.PropertyChanged += (s, e) => this.FollowUpRebind();
+        }
+
+        /* WARNING
+         * NEVER EVER COPY CODES
+         * Even though the resource cost isn't that expensive
+         * Even though the it is bug free
+         * 
+         * UNLESS YOU ARE ON A THIGHT DEADLINE
+         */
+
         void FollowUpRebind()
         {
             EntryDefinitionRichTextBlock.Blocks.Clear();
@@ -52,12 +59,10 @@ namespace GMD.Views
             // tfw best practice :p
         }
 
-        private void FavouriteAppBarToggleButton_Checked(object sender, RoutedEventArgs e) =>        
-            App.EntriesManager.AddFavouriteEntry(DisplayedEntry.ToEntry());            
-        
+        private void FavouriteAppBarToggleButton_Checked(object sender, RoutedEventArgs e) =>
+                    App.EntriesManager.AddFavouriteEntry(DisplayedEntry.ToEntry());
 
-        private void FavouriteAppBarToggleButton_Unchecked(object sender, RoutedEventArgs e) =>        
+        private void FavouriteAppBarToggleButton_Unchecked(object sender, RoutedEventArgs e) =>
             App.EntriesManager.RemoveFavouriteEntry(DisplayedEntry.ToEntry());
-        
-    }    
+    }
 }

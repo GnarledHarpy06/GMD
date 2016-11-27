@@ -17,6 +17,7 @@ namespace GMD.ViewModels
     {
         private byte[][] arrayOfAllQueriedIdxByteArray;        
         private WordStrsIndex[] arrayOfAllQueriedWordStrsIndex;
+        public ObservableCollection<FavouriteEntry> FavouriteEntries = new ObservableCollection<FavouriteEntry>();
         public ObservableCollection<RecentEntry> ViewedEntries = new ObservableCollection<RecentEntry>();
         public ObservableCollection<WordStrByBookName> CollectionMatchedOfKeywordsByBookName = 
             new ObservableCollection<WordStrByBookName>();
@@ -37,12 +38,37 @@ namespace GMD.ViewModels
                 App.DictsManager.DictDatabaseChanged += (s, e) => updatearrayOfAllQueriedKeywordsAsync();
                 populatearrayOfAllQueriedWordStrsIndexesAsync();
                 populatearrayOfAllQueriedIdxByteArray();
-                populateCollectionOfViewedEntry();
+                populateCollectionOfViewedEntries();
+                populateCollectionOfFavouriteEntries();
             }
             catch { }
         }
 
-        private void populateCollectionOfViewedEntry()
+        private void populateCollectionOfFavouriteEntries()
+        {
+            var dbViewedEntr = connection.Table<FavouriteEntry>();
+            foreach (var item in dbViewedEntr)
+                FavouriteEntries.Add(item);
+        }
+
+        public void AddFavouriteEntry(Entry favouriteEntry)
+        {
+            if (FavouriteEntries.Where(e => (e.DictId == favouriteEntry.DictId) && (e.WordStr == favouriteEntry.WordStr)).Count() == 0)
+            {
+                FavouriteEntry FE = new FavouriteEntry(favouriteEntry);
+                FavouriteEntries.Add(FE);
+                connection.Insert(FE);
+            }
+        }
+
+        public void RemoveFavouriteEntry(Entry favouriteEntry) =>        
+            FavouriteEntries.Remove(FavouriteEntries
+                .Where(f => (f.DictId == favouriteEntry.DictId) 
+                && (f.WordStr == favouriteEntry.WordStr))
+                .FirstOrDefault());
+        
+
+        private void populateCollectionOfViewedEntries()
         {            
             var dbViewedEntr = connection.Table<RecentEntry>();
             foreach (var item in dbViewedEntr)

@@ -51,6 +51,7 @@
         <SplitView x:Name="HamburgerSplitView"
                    DisplayMode="CompactOverlay"
                    CompactPaneLength="48"
+                   OpenPaneLength="250"
                    HorizontalContentAlignment="Stretch">
             <SplitView.Pane>
                 <RelativePanel Background="{StaticResource SplitViewBackgroundBrush}"
@@ -59,22 +60,9 @@
                                RelativePanel.AlignTopWithPanel="True"
                                Style="{StaticResource TitleText}"                               
                                Text="GMD"
-                               Margin="56,8,0,8"/>
+                               Margin="56,8,8,8"/>
                     <StackPanel RelativePanel.Below="MenuHeader"
-                                HorizontalAlignment="Stretch">
-                        <RadioButton Style="{StaticResource SplitViewRadioButtonStyle}"
-                                     Command="{Binding NavCommand}"
-                                     IsChecked="True"
-                                     Content="History"
-                                     GroupName="Nav">
-                            <RadioButton.CommandParameter>
-                                <local:NavType Type="views:SearchPage" />
-                            </RadioButton.CommandParameter>
-                            <RadioButton.Tag>
-                                <TextBlock Style="{StaticResource SplitViewTextBlockStyle}"
-                                           Text="&#xE81C;"/>
-                            </RadioButton.Tag>
-                        </RadioButton>
+                                HorizontalAlignment="Stretch">                        
                         <RadioButton Style="{StaticResource SplitViewRadioButtonStyle}"
                                      Command="{Binding NavCommand}"
                                      Content="Search"

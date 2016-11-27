@@ -115,6 +115,9 @@
     <Compile Include="Views\DisplayPage.xaml.cs">
       <DependentUpon>DisplayPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\DisplayPage_copy.xaml.cs">
+      <DependentUpon>DisplayPage_copy.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\FavoritesPage.xaml.cs">
       <DependentUpon>FavoritesPage.xaml</DependentUpon>
     </Compile>
@@ -169,6 +172,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\DisplayPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DisplayPage_copy.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

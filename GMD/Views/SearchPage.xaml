@@ -118,8 +118,7 @@
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
-
-        <Grid>            
+        
             <Grid.ColumnDefinitions>
                 <ColumnDefinition x:Name="MasterColumn" Width="320"/>
                 <ColumnDefinition x:Name="DetailColumn" Width="*"/>
@@ -134,10 +133,11 @@
                 <CommandBar x:Name="SearchPageCommandBar"
                         Grid.Row="0">
                     <CommandBar.Content>
-                        <TextBlock x:Name="SearchPageHeaderTextBlock"
-                               Text="HistoryPage"
+                    <TextBlock x:Name="SearchPageHeaderTextBlock"
                                Margin="8"
-                               Style="{StaticResource TitleText}"/>
+                               Style="{StaticResource TitleText}">
+                        Search &amp; History
+                    </TextBlock>
                     </CommandBar.Content>
                 </CommandBar>
 
@@ -190,7 +190,7 @@
                    HorizontalAlignment="Stretch"
                    Grid.Row="0"
                    Grid.Column="1" />
-        </Grid>
+        
 
     </Grid>
 </Page>

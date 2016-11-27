@@ -3,8 +3,10 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:GMD.Views"
+    xmlns:models="using:GMD.Models"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    NavigationCacheMode="Enabled"
     mc:Ignorable="d">
 
     <Page.Resources>
@@ -16,9 +18,120 @@
     </Page.Resources>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <TextBlock Text="Favorites Page"
-                   Margin="8"
-                   Style="{StaticResource HeaderText}"/>
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="AdaptiveStates">
+                <VisualState x:Name="DefaultState">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="720" />
+                    </VisualState.StateTriggers>
+                    <!--<VisualState.Setters>
+                        <Setter Target="SearchPageCommandBar.Margin">
+                            <Setter.Value>
+                                <Thickness>0</Thickness>
+                            </Setter.Value>
+                        </Setter>
+                        <Setter Target="MasterColumn.Width">
+                            <Setter.Value>
+                                <GridLength>0</GridLength>
+                            </Setter.Value>
+                        </Setter>
+                        <Setter Target="DetailColumn.Width">
+                            <Setter.Value>
+                                <GridLength>*</GridLength>
+                            </Setter.Value>
+                        </Setter>
+                    </VisualState.Setters>-->
+                </VisualState>
+                <VisualState x:Name="NarrowState">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="FavouritesPageCommandBar.Margin">
+                            <Setter.Value>
+                                <Thickness>48,0,0,0</Thickness>
+                            </Setter.Value>
+                        </Setter>
+                        <Setter Target="MasterColumn.Width">
+                            <Setter.Value>
+                                <GridLength>*</GridLength>
+                            </Setter.Value>
+                        </Setter>
+                        <Setter Target="DetailColumn.Width">
+                            <Setter.Value>
+                                <GridLength>0</GridLength>
+                            </Setter.Value>
+                        </Setter>
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+            <VisualStateGroup x:Name="NarrowStates">
+                <VisualState x:Name="MasterState">
+                    <VisualState.Setters>
+                        <Setter Target="MasterColumn.Width" >
+                            <Setter.Value>
+                                *
+                            </Setter.Value>
+                        </Setter>
+                        <Setter Target="DetailColumn.Width" >
+                            <Setter.Value>
+                                0
+                            </Setter.Value>
+                        </Setter>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="DetailState">
+                    <VisualState.Setters>
+                        <Setter Target="MasterColumn.Width" >
+                            <Setter.Value>
+                                0
+                            </Setter.Value>
+                        </Setter>
+                        <Setter Target="DetailColumn.Width" >
+                            <Setter.Value>
+                                *
+                            </Setter.Value>
+                        </Setter>
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>            
+        </VisualStateManager.VisualStateGroups>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition x:Name="MasterColumn" Width="320"/>
+            <ColumnDefinition x:Name="DetailColumn" Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid x:Name="MasterGrid">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />                
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <CommandBar x:Name="FavouritesPageCommandBar"
+                        Grid.Row="0">
+                <CommandBar.Content>
+                    <TextBlock x:Name="FavouritesPageHeaderTextBlock"
+                               Text="Favourites"
+                               Margin="8"
+                               Style="{StaticResource TitleText}"/>
+                </CommandBar.Content>
+            </CommandBar>
+            <ListView x:Name="FavouriteEntriesListView"
+                      Grid.Row="2"
+                      IsItemClickEnabled="True"
+                      ItemClick="FavouriteEntriesListView_ItemClick">
+                <ListView.ItemTemplate>
+                    <DataTemplate x:DataType="models:FavouriteEntry">
+                        <TextBlock Style="{StaticResource BodyText}"
+                                       Text="{x:Bind WordStr}"
+                                       TextTrimming="CharacterEllipsis"/>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>           
+        </Grid>
+        <Frame x:Name="DetailFrame"
+                   HorizontalAlignment="Stretch"
+                   Grid.Row="0"
+                   Grid.Column="1" />
 
     </Grid>
 </Page>

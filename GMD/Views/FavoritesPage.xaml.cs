@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GMD.Models;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -25,6 +26,27 @@ namespace GMD.Views
         public FavoritesPage()
         {
             this.InitializeComponent();
+            FavouriteEntriesListView.ItemsSource = App.EntriesManager.FavouriteEntries;
+            DetailFrame.Navigate(typeof(DisplayPage_copy));
+        }
+
+        private void FavouriteEntriesListView_ItemClick(object sender, ItemClickEventArgs e) =>
+            displayEntry(((FavouriteEntry)e.ClickedItem).ToEntry());        
+
+        private void displayEntry(Entry clickedEntry)
+        {
+            App.CurrentEntry2.UpdateEntry(clickedEntry);
+
+            if (AdaptiveStates.CurrentState == NarrowState)
+            {
+                VisualStateManager.GoToState(this, DetailState.Name, true);
+
+                Windows.UI.Core.SystemNavigationManager.GetForCurrentView().BackRequested += (s, f) =>
+                {
+                    f.Handled = true;
+                    VisualStateManager.GoToState(this, MasterState.Name, true);
+                };
+            }
         }
     }
 }

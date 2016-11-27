@@ -57,7 +57,7 @@ namespace GMD.ViewModels
                 connection.CreateTable<Dict>();
                 connection.CreateTable<WordStrDBIndex>();
                 connection.CreateTable<RecentEntry>();
-                connection.CreateTable<FavouritEntry>();
+                connection.CreateTable<FavouriteEntry>();
             }
             else
             {

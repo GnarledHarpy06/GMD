@@ -19,7 +19,7 @@
 
     <Style TargetType="SplitView">
         <Setter Property="IsPaneOpen" Value="False" />
-        <Setter Property="OpenPaneLength" Value="320" />
+        <Setter Property="OpenPaneLength" Value="250" />
         <Setter Property="CompactPaneLength" Value="48" />
         <Setter Property="PaneBackground" Value="{ThemeResource SplitViewBackgroundBrush}" />
         <Setter Property="DisplayMode" Value="CompactOverlay" />
@@ -36,7 +36,7 @@
     <Style TargetType="RadioButton" x:Key="SplitViewRadioButtonStyle">
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="Foreground" Value="{ThemeResource SplitViewForegroundBrush}" />
-        <Setter Property="Padding" Value="1,0,0,0" />
+        <Setter Property="Padding" Value="9,0,0,0" />
         <Setter Property="HorizontalAlignment" Value="Stretch" />
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="HorizontalContentAlignment" Value="Left" />

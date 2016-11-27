@@ -33,6 +33,17 @@ namespace GMD.Models
     {
         public string wordDataOffset { get; set; }
         public Int64 wordDataSize { get; set; }
+
+        public Entry ToEntry()
+        {
+            return new Entry
+            {
+                DictId = this.DictId,
+                WordStr = this.WordStr,
+                wordDataOffset = this.wordDataOffset,
+                wordDataSize = this.wordDataSize
+            };
+        }
     }
 
     //public class EntriesGrouping : System.Linq.IGrouping<string, Entry>
@@ -133,6 +144,7 @@ namespace GMD.Models
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
+
     public class RecentEntry : Entry
     {
         [PrimaryKey, AutoIncrement, Unique]
@@ -145,18 +157,7 @@ namespace GMD.Models
             WordStr = recentEntry.WordStr;
             wordDataOffset = recentEntry.wordDataOffset;
             wordDataSize = recentEntry.wordDataSize;
-        }
-
-        public Entry ToEntry()
-        {
-            return new Entry
-            {
-                DictId = this.DictId,
-                WordStr = this.WordStr,
-                wordDataOffset = this.wordDataOffset,
-                wordDataSize = this.wordDataSize
-            };
-        }
+        }        
 
         public static void SimpleSortRecentEntriesOC(System.Collections.ObjectModel.ObservableCollection<RecentEntry> recententries)
         {
@@ -175,8 +176,17 @@ namespace GMD.Models
         }
     }
 
-    public class FavouritEntry : Entry
+    public class FavouriteEntry : Entry
     {
-        private int favoritLemmaID { get; set; }
+        [PrimaryKey, AutoIncrement, Unique]
+        private int favouritLemmaID { get; set; }
+        public FavouriteEntry() { }
+        public FavouriteEntry(Entry recentEntry)
+        {
+            DictId = recentEntry.DictId;
+            WordStr = recentEntry.WordStr;
+            wordDataOffset = recentEntry.wordDataOffset;
+            wordDataSize = recentEntry.wordDataSize;
+        }        
     }
 }
