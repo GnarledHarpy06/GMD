@@ -37,9 +37,9 @@
                         <AdaptiveTrigger MinWindowWidth="0" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="SearchPageHeaderTextBlock.Margin">
+                        <Setter Target="SearchPageCommandBar.Margin">
                             <Setter.Value>
-                                <Thickness>56,8,8,8</Thickness>
+                                <Thickness>48,0,0,0</Thickness>
                             </Setter.Value>
                         </Setter>
                         <Setter Target="MasterColumn.Width">
@@ -85,6 +85,38 @@
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
+            <VisualStateGroup x:Name="QueryStates">
+                <VisualState x:Name="QueryState">
+                    <VisualState.StateTriggers>                        
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="RecentEntriesListView.Visibility">
+                            <Setter.Value>
+                                <Visibility>Collapsed</Visibility>
+                            </Setter.Value>
+                        </Setter>
+                        <Setter Target="QueryListView.Visibility">
+                            <Setter.Value>
+                                <Visibility>Visible</Visibility>
+                            </Setter.Value>
+                        </Setter>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="RecentEntriesState">
+                    <VisualState.Setters>
+                        <Setter Target="RecentEntriesListView.Visibility">
+                            <Setter.Value>
+                                <Visibility>Visible</Visibility>
+                            </Setter.Value>
+                        </Setter>
+                        <Setter Target="QueryListView.Visibility">
+                            <Setter.Value>
+                                <Visibility>Collapsed</Visibility>
+                            </Setter.Value>
+                        </Setter>
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
 
         <Grid>            
@@ -94,6 +126,7 @@
             </Grid.ColumnDefinitions>            
             <Grid x:Name="MasterGrid">
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition />
@@ -117,10 +150,23 @@
                      PlaceholderText="Search keyword"
                      TextChanged="QueryTextBox_TextChanged">
                 </TextBox>
+                <ListView x:Name="RecentEntriesListView"
+                          Grid.Row="2"
+                          IsItemClickEnabled="True"                          
+                          ItemClick="RecentEntriesListView_ItemClick">
+                    <ListView.ItemTemplate>
+                        <DataTemplate x:DataType="models:RecentEntry">
+                            <TextBlock Style="{StaticResource BodyText}"
+                                       Text="{x:Bind WordStr}"
+                                       TextTrimming="CharacterEllipsis"/>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
                 <ListView x:Name="QueryListView"
-                      Grid.Row="2"
-                      IsItemClickEnabled="True"
-                      ItemClick="QueryListView_ItemClick">
+                          Visibility="Collapsed"
+                          Grid.Row="3"
+                          IsItemClickEnabled="True"
+                          ItemClick="QueryListView_ItemClick">
                     <ListView.ItemTemplate>
                         <DataTemplate x:DataType="models:WordStrByBookName">
                             <TextBlock Style="{StaticResource BodyText}"

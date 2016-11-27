@@ -6,6 +6,7 @@ using System.Text;
 using System.ComponentModel;
 using System.Collections.Generic;
 using Windows.UI.Xaml.Documents;
+using SQLite.Net.Attributes;
 
 namespace GMD.Models
 {
@@ -64,6 +65,7 @@ namespace GMD.Models
         public DisplayEntry(Entry entry)
         {
             Dict entryDict = new ManageDicts().Dicts.Where(p => p.DictID == entry.DictId).FirstOrDefault();
+            DictId = entryDict.DictID;
             BookName = entryDict.BookName;
             WordStr = entry.WordStr;
             wordDataOffset = entry.wordDataOffset;
@@ -108,9 +110,9 @@ namespace GMD.Models
 
         public void UpdateEntry(DisplayEntry newEntry)
         {
-            this.WordStr = newEntry.WordStr;
-            this.BookName = newEntry.BookName;
             this.DictId = newEntry.DictId;
+            this.BookName = newEntry.BookName;
+            this.WordStr = newEntry.WordStr;
             this.wordDataOffset = newEntry.wordDataOffset;
             this.wordDataSize = newEntry.wordDataSize;
 
@@ -133,7 +135,44 @@ namespace GMD.Models
     }
     public class RecentEntry : Entry
     {
-        private int recentlemmaID { get; set; }
+        [PrimaryKey, AutoIncrement, Unique]
+        public int RecentlemmaID { get; private set; }
+
+        public RecentEntry() { }
+        public RecentEntry(Entry recentEntry)
+        {
+            DictId = recentEntry.DictId;
+            WordStr = recentEntry.WordStr;
+            wordDataOffset = recentEntry.wordDataOffset;
+            wordDataSize = recentEntry.wordDataSize;
+        }
+
+        public Entry ToEntry()
+        {
+            return new Entry
+            {
+                DictId = this.DictId,
+                WordStr = this.WordStr,
+                wordDataOffset = this.wordDataOffset,
+                wordDataSize = this.wordDataSize
+            };
+        }
+
+        public static void SimpleSortRecentEntriesOC(System.Collections.ObjectModel.ObservableCollection<RecentEntry> recententries)
+        {
+            /* It won't be a proper sorting algorithm
+             * since this specifications have a number of exact rules
+             * we can use to simplify things :p
+             */
+
+            var tmpArray = recententries.ToArray();
+            int totalItems = tmpArray.Length;
+            for (int i = 0; i < totalItems; i++)
+            {
+                recententries.RemoveAt(totalItems - tmpArray[i].RecentlemmaID);
+                recententries.Insert(totalItems - tmpArray[i].RecentlemmaID, tmpArray[i]);
+            }
+        }
     }
 
     public class FavouritEntry : Entry

@@ -28,14 +28,22 @@ namespace GMD.Views
         public SearchPage()
         {
             this.InitializeComponent();
+            RecentEntriesListView.ItemsSource = App.EntriesManager.ViewedEntries;
             QueryListView.ItemsSource = App.EntriesManager.CollectionMatchedOfKeywordsByBookName;
             DetailFrame.Navigate(typeof(DisplayPage));
         }
 
         private void QueryTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if(QueryTextBox.Text != "")
+            if(QueryTextBox.Text == "")
+            {
+                VisualStateManager.GoToState(this, RecentEntriesState.Name, true);
+            }
+            else
+            {
                 App.EntriesManager.QueryKeywords(QueryTextBox.Text);
+                VisualStateManager.GoToState(this, QueryState.Name, true);
+            }
         }
         
         private void SearchPage_Loaded(object sender, RoutedEventArgs e)
@@ -46,24 +54,23 @@ namespace GMD.Views
         }
                 
         private void AdaptiveStates_CurrentStateChanged(object sender, VisualStateChangedEventArgs e)
-        {
-            //if(e.NewState == NarrowState)
-            //{
-            //    MasterColumn.Width = new GridLength(1, GridUnitType.Star);
-            //    DetailColumn.Width = new GridLength(0, GridUnitType.Star);
-            //    SearchPageHeaderTextBlock.Margin = new Thickness(56, 8, 8, 8);
-            //}
-            //else if (e.NewState == DefaultState)
-            //{
-            //    MasterColumn.Width = new GridLength(320, GridUnitType.Pixel);
-            //    DetailColumn.Width = new GridLength(1, GridUnitType.Star);
-            //    SearchPageHeaderTextBlock.Margin = new Thickness(8, 8, 8, 8);
-            //}
+        {            
         }        
 
         private void QueryListView_ItemClick(object sender, ItemClickEventArgs e)
         {
-            App.CurrentEntry.UpdateEntry(App.EntriesManager.GetEntry((WordStrByBookName)e.ClickedItem));
+            displayEntry(App.EntriesManager.GetEntry((WordStrByBookName)e.ClickedItem));
+        }
+
+        private void RecentEntriesListView_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            displayEntry(((RecentEntry)e.ClickedItem).ToEntry());
+        }
+
+        private void displayEntry(Entry clickedEntry)
+        {
+            App.CurrentEntry.UpdateEntry(clickedEntry);
+
             if (AdaptiveStates.CurrentState == NarrowState)
             {
                 VisualStateManager.GoToState(this, DetailState.Name, true);
@@ -74,8 +81,9 @@ namespace GMD.Views
                     VisualStateManager.GoToState(this, MasterState.Name, true);
                 };
             }
-            
-        }        
+
+            App.EntriesManager.AddRecentEntry(clickedEntry);
+        }
 
         //public delegate void EntryUpdateHandler(object sender, SearchPageEventArgs e);
         //public event EntryUpdateHandler OnCurrentEntryChanged;

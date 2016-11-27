@@ -17,6 +17,7 @@ namespace GMD.ViewModels
     {
         private byte[][] arrayOfAllQueriedIdxByteArray;        
         private WordStrsIndex[] arrayOfAllQueriedWordStrsIndex;
+        public ObservableCollection<RecentEntry> ViewedEntries = new ObservableCollection<RecentEntry>();
         public ObservableCollection<WordStrByBookName> CollectionMatchedOfKeywordsByBookName = 
             new ObservableCollection<WordStrByBookName>();
 
@@ -36,8 +37,30 @@ namespace GMD.ViewModels
                 App.DictsManager.DictDatabaseChanged += (s, e) => updatearrayOfAllQueriedKeywordsAsync();
                 populatearrayOfAllQueriedWordStrsIndexesAsync();
                 populatearrayOfAllQueriedIdxByteArray();
+                populateCollectionOfViewedEntry();
             }
             catch { }
+        }
+
+        private void populateCollectionOfViewedEntry()
+        {            
+            var dbViewedEntr = connection.Table<RecentEntry>();
+            foreach (var item in dbViewedEntr)
+                ViewedEntries.Add(item);
+
+            RecentEntry.SimpleSortRecentEntriesOC(ViewedEntries);
+        }
+
+        public void AddRecentEntry(Entry viewedentry)
+        {
+            if (ViewedEntries.Where(e => (e.DictId == viewedentry.DictId) && (e.WordStr == viewedentry.WordStr)).Count() == 0)
+            {
+                RecentEntry RE = new RecentEntry(viewedentry);
+                ViewedEntries.Add(RE);
+                connection.Insert(RE);
+
+                RecentEntry.SimpleSortRecentEntriesOC(ViewedEntries);
+            }
         }
 
         private void populatearrayOfAllQueriedIdxByteArray()
