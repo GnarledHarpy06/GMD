@@ -36,9 +36,9 @@
                         <AdaptiveTrigger MinWindowWidth="0" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="DictionaryPageHeaderTextBlock.Margin">
+                        <Setter Target="DictionaryPageCommandBar.Margin">
                             <Setter.Value>
-                                <Thickness>56,8,8,8</Thickness>
+                                <Thickness>48,0,0,0</Thickness>
                             </Setter.Value>
                         </Setter>
                     </VisualState.Setters>
@@ -51,7 +51,7 @@
             <RowDefinition />
         </Grid.RowDefinitions>
 
-        <CommandBar Grid.Row="0">
+        <CommandBar x:Name="DictionaryPageCommandBar" Grid.Row="0">
             <CommandBar.Content>
                 <TextBlock x:Name="DictionaryPageHeaderTextBlock"
                            Text="Dictionary"

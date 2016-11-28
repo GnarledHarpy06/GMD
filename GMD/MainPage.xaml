@@ -33,8 +33,11 @@
                 </VisualState>                
                 <VisualState x:Name="DefaultState">
                     <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="720" />
+                        <AdaptiveTrigger MinWindowWidth="720" />                        
                     </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="HamburgerSplitView.DisplayMode" Value="CompactOverlay" />
+                    </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="NarrowState">
                     <VisualState.StateTriggers>
@@ -48,8 +51,7 @@
         </VisualStateManager.VisualStateGroups>
 
 
-        <SplitView x:Name="HamburgerSplitView"
-                   DisplayMode="CompactOverlay"
+        <SplitView x:Name="HamburgerSplitView"                   
                    CompactPaneLength="48"
                    OpenPaneLength="250"
                    HorizontalContentAlignment="Stretch">
