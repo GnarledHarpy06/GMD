@@ -16,9 +16,42 @@
     </Page.Resources>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <TextBlock Text="Settings Page"
-                   Margin="8"
-                   Style="{StaticResource HeaderText}"/>
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="AdaptiveStates">
+                <VisualState x:Name="DefaultState">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="720" />
+                    </VisualState.StateTriggers>
+                </VisualState>
+                <VisualState x:Name="NarrowState">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="SettingsPageCommandBar.Margin">
+                            <Setter.Value>
+                                <Thickness>48,0,0,0</Thickness>
+                            </Setter.Value>
+                        </Setter>
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <CommandBar x:Name="SettingsPageCommandBar"
+                    Grid.Row="0">
+            <CommandBar.Content>
+                <TextBlock x:Name="SettingsPageHeaderTextBlock"
+                           Text="Settings"
+                           Margin="8"
+                           Style="{StaticResource TitleText}"/>
+            </CommandBar.Content>
+        </CommandBar>
 
     </Grid>
 </Page>

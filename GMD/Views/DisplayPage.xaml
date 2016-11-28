@@ -91,21 +91,24 @@
                     <StackPanel Orientation="Horizontal"
                                 Margin="8,8,0,0">
                         <TextBlock Text="&#xE82D;"
-                                   FontSize="27"
+                                   Foreground="{ThemeResource SystemControlBackgroundAltMediumBrush}"
+                                   FontSize="18"
                                    FontFamily="Segoe MDL2 Assets" />
                         <TextBlock Grid.Row="0"
                                    Margin="8,0,0,0"
-                                   Name="DictNameTextBlock"                                   
+                                   Name="DictNameTextBlock"
+                                   Foreground="{ThemeResource SystemControlBackgroundAltMediumBrush}"
                                    Text="{x:Bind DisplayedEntry.BookName}"
-                                   Style="{StaticResource SubtitleText}"
+                                   Style="{StaticResource CaptionText}"
                                    TextTrimming="CharacterEllipsis"/>                        
                     </StackPanel>
                     
                     <TextBlock Grid.Row="1"
                                Name="EntryWordStrTextBlock"
+                               Foreground="WhiteSmoke"
                                Margin="8,0,0,8"
                                Text="{x:Bind DisplayedEntry.WordStr}"
-                               Style="{StaticResource HeaderText}" />
+                               Style="{StaticResource SubheaderText}" />
                 </Grid>
                 <RichTextBlock Grid.Row="1"
                                x:Name="EntryDefinitionRichTextBlock"

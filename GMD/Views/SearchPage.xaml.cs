@@ -51,6 +51,7 @@ namespace GMD.Views
             Loaded -= SearchPage_Loaded;
             App.EntriesManager.ConstructAsync();
             // tfw best practice :p
+            QueryTextBox.Focus(FocusState.Programmatic);
         }
                 
         private void AdaptiveStates_CurrentStateChanged(object sender, VisualStateChangedEventArgs e)
@@ -85,22 +86,10 @@ namespace GMD.Views
             App.EntriesManager.AddRecentEntry(clickedEntry);
         }
 
-        //public delegate void EntryUpdateHandler(object sender, SearchPageEventArgs e);
-        //public event EntryUpdateHandler OnCurrentEntryChanged;
-
-        //void RaiseOnCurrentEntryChanged(Entry selectedEntry)
-        //{
-        //    OnCurrentEntryChanged?.Invoke(this, new SearchPageEventArgs(selectedEntry));
-        //}
-    }
-
-    //public class SearchPageEventArgs : EventArgs
-    //{
-    //    public Entry SelectedEntry { get; private set; }
-
-    //    public SearchPageEventArgs(Entry newEntry)
-    //    {
-    //        SelectedEntry = newEntry;
-    //    }        
-    //}
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            VisualStateManager.GoToState(this, MasterState.Name, true);
+            QueryTextBox.Text = "";
+        }
+    }    
 }

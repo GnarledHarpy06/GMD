@@ -48,5 +48,8 @@ namespace GMD.Views
                 };
             }
         }
+
+        protected override void OnNavigatedFrom(NavigationEventArgs e) =>        
+            VisualStateManager.GoToState(this, MasterState.Name, true);
     }
 }

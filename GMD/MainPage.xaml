@@ -63,71 +63,85 @@
                                Style="{StaticResource TitleText}"                               
                                Text="GMD"
                                Margin="56,8,8,8"/>
-                    <StackPanel RelativePanel.Below="MenuHeader"
-                                HorizontalAlignment="Stretch">                        
-                        <RadioButton Style="{StaticResource SplitViewRadioButtonStyle}"
-                                     Command="{Binding NavCommand}"
-                                     Content="Search"
-                                     GroupName="Nav">
-                            <RadioButton.CommandParameter>
-                                <local:NavType Type="views:SearchPage" />
-                            </RadioButton.CommandParameter>
-                            <RadioButton.Tag>
-                                <TextBlock Style="{StaticResource SplitViewTextBlockStyle}"
+                    <RadioButton Name="SearchRadioButton"
+                                 RelativePanel.Below="MenuHeader"
+                                 RelativePanel.AlignLeftWithPanel="True"
+                                 RelativePanel.AlignRightWithPanel="True"
+                                 Style="{StaticResource SplitViewRadioButtonStyle}"
+                                 Command="{Binding NavCommand}"
+                                 Content="Search"
+                                 GroupName="Nav">
+                        <RadioButton.CommandParameter>
+                            <local:NavType Type="views:SearchPage" />
+                        </RadioButton.CommandParameter>
+                        <RadioButton.Tag>
+                            <TextBlock Style="{StaticResource SplitViewTextBlockStyle}"
                                            Text="&#xE094;" />
-                            </RadioButton.Tag>
-                        </RadioButton>
-                        <RadioButton Style="{StaticResource SplitViewRadioButtonStyle}"
-                                     Command="{Binding NavCommand}"
-                                     Content="Favorites"
-                                     GroupName="Nav">
-                            <RadioButton.CommandParameter>
-                                <local:NavType Type="views:FavoritesPage" />
-                            </RadioButton.CommandParameter>
-                            <RadioButton.Tag>
-                                <TextBlock Style="{StaticResource SplitViewTextBlockStyle}"
+                        </RadioButton.Tag>
+                    </RadioButton>
+                    <RadioButton Name="FavoritesRadioButton"
+                                 RelativePanel.AlignLeftWithPanel="True"
+                                 RelativePanel.AlignRightWithPanel="True"
+                                 RelativePanel.Below="SearchRadioButton"
+                                 Style="{StaticResource SplitViewRadioButtonStyle}"
+                                 Command="{Binding NavCommand}"
+                                 Content="Favorites"
+                                 GroupName="Nav">
+                        <RadioButton.CommandParameter>
+                            <local:NavType Type="views:FavoritesPage" />
+                        </RadioButton.CommandParameter>
+                        <RadioButton.Tag>
+                            <TextBlock Style="{StaticResource SplitViewTextBlockStyle}"
                                            Text="&#xE734;" />
-                            </RadioButton.Tag>
-                        </RadioButton>
-                        <RadioButton Style="{StaticResource SplitViewRadioButtonStyle}"
-                                     Command="{Binding NavCommand}"
-                                     Content="Dictionaries"
-                                     GroupName="Nav">
-                            <RadioButton.CommandParameter>
-                                <local:NavType Type="views:DictionariesPage" />
-                            </RadioButton.CommandParameter>
-                            <RadioButton.Tag>
-                                <TextBlock Style="{StaticResource SplitViewTextBlockStyle}"
+                        </RadioButton.Tag>
+                    </RadioButton>
+                    <RadioButton RelativePanel.Below="FavoritesRadioButton" 
+                                 RelativePanel.AlignLeftWithPanel="True"
+                                 RelativePanel.AlignRightWithPanel="True"
+                                 Style="{StaticResource SplitViewRadioButtonStyle}"
+                                 Command="{Binding NavCommand}"
+                                 Content="Dictionaries"
+                                 GroupName="Nav">
+                        <RadioButton.CommandParameter>
+                            <local:NavType Type="views:DictionariesPage" />
+                        </RadioButton.CommandParameter>
+                        <RadioButton.Tag>
+                            <TextBlock Style="{StaticResource SplitViewTextBlockStyle}"
                                            Text="&#xE1D3;" />
-                            </RadioButton.Tag>
-                        </RadioButton>
-                    </StackPanel>
-                    <StackPanel RelativePanel.AlignBottomWithPanel="True">
-                        <RadioButton Style="{StaticResource SplitViewRadioButtonStyle}"
-                                     Command="{Binding NavCommand}"
-                                     Content="Settings"
-                                     GroupName="Nav">
-                            <RadioButton.CommandParameter>
-                                <local:NavType Type="views:SettingsPage" />
-                            </RadioButton.CommandParameter>
-                            <RadioButton.Tag>
-                                <TextBlock Style="{StaticResource SplitViewTextBlockStyle}"
-                                           Text="&#xE115;" />
-                            </RadioButton.Tag>
-                        </RadioButton>
-                        <RadioButton Style="{StaticResource SplitViewRadioButtonStyle}"                                     
-                                     Command="{Binding NavCommand}"
-                                     Content="About"
-                                     GroupName="Nav">
-                            <RadioButton.CommandParameter>
+                        </RadioButton.Tag>
+                    </RadioButton>
+                    <RadioButton RelativePanel.Above="SettingsRadioButton"
+                                 RelativePanel.AlignLeftWithPanel="True"
+                                 RelativePanel.AlignRightWithPanel="True"
+                                 Style="{StaticResource SplitViewRadioButtonStyle}"
+                                 Command="{Binding NavCommand}"
+                                 Content="About"
+                                 GroupName="Nav">
+                        <RadioButton.CommandParameter>
                                 <local:NavType Type="views:AboutPage" />
                             </RadioButton.CommandParameter>
-                            <RadioButton.Tag>
+                        <RadioButton.Tag>
                                 <TextBlock Style="{StaticResource SplitViewTextBlockStyle}"
                                            Text="&#xE783;" />
                             </RadioButton.Tag>
-                        </RadioButton>
-                    </StackPanel>
+                    </RadioButton>
+                    <RadioButton Name="SettingsRadioButton"
+                                 RelativePanel.AlignLeftWithPanel="True"
+                                 RelativePanel.AlignRightWithPanel="True"
+                                 RelativePanel.AlignBottomWithPanel="True"
+                                 Style="{StaticResource SplitViewRadioButtonStyle}"
+                                 Command="{Binding NavCommand}"
+                                 Content="Settings"
+                                 GroupName="Nav">
+                        <RadioButton.CommandParameter>
+                                <local:NavType Type="views:SettingsPage" />
+                            </RadioButton.CommandParameter>
+                        <RadioButton.Tag>
+                                <TextBlock Style="{StaticResource SplitViewTextBlockStyle}"
+                                           Text="&#xE115;" />
+                            </RadioButton.Tag>
+                    </RadioButton>
+                    
 
                 </RelativePanel>
             </SplitView.Pane>
@@ -143,6 +157,7 @@
                 Width="48"
                 Height="48"
                 Background="{StaticResource SplitViewBackgroundBrush}"
+                Foreground="{ThemeResource InkToolbarAccentColorThemeBrush}"
                 Content="&#xE700;"
                 FontSize="20"
                 FontFamily="Segoe MDL2 Assets">            

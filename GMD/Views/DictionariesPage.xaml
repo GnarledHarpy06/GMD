@@ -10,17 +10,68 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <!--<Page.DataContext>
-        <viewModels:ManageDicts x:Name="ViewModel" />
-    </Page.DataContext>-->
-
     <Page.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Styles/SimpleTextHierarchyStyles.xaml"/>
-            </ResourceDictionary.MergedDictionaries>            
-        </ResourceDictionary>        
-        
+            </ResourceDictionary.MergedDictionaries>
+            <Style x:Key="DictionaryListViewContainerTemplateStyle" TargetType="ListViewItem">
+                <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}"/>
+                <Setter Property="FontSize" Value="{ThemeResource ControlContentThemeFontSize}"/>
+                <Setter Property="Background" Value="{ThemeResource ListViewItemBackground}"/>
+                <Setter Property="Foreground" Value="{ThemeResource ListViewItemForeground}"/>
+                <Setter Property="TabNavigation" Value="Local"/>
+                <Setter Property="IsHoldingEnabled" Value="True"/>
+                <Setter Property="Padding" Value="12,0,12,0"/>
+                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                <Setter Property="VerticalContentAlignment" Value="Center"/>
+                <Setter Property="MinWidth" Value="{ThemeResource ListViewItemMinWidth}"/>
+                <Setter Property="MinHeight" Value="{ThemeResource ListViewItemMinHeight}"/>
+                <Setter Property="AllowDrop" Value="False"/>
+                <Setter Property="UseSystemFocusVisuals" Value="True"/>
+                <Setter Property="FocusVisualMargin" Value="0"/>
+                <Setter Property="FocusVisualPrimaryBrush" Value="{ThemeResource ListViewItemFocusVisualPrimaryBrush}"/>
+                <Setter Property="FocusVisualPrimaryThickness" Value="2"/>
+                <Setter Property="FocusVisualSecondaryBrush" Value="{ThemeResource ListViewItemFocusVisualSecondaryBrush}"/>
+                <Setter Property="FocusVisualSecondaryThickness" Value="1"/>
+                <!--<Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="ListViewItem">
+                            <ListViewItemPresenter CheckBrush="{ThemeResource ListViewItemCheckBrush}"
+                                                   ContentMargin="{TemplateBinding Padding}"
+                                                   CheckMode="{ThemeResource ListViewItemCheckMode}"
+                                                   ContentTransitions="{TemplateBinding ContentTransitions}"
+                                                   CheckBoxBrush="{ThemeResource ListViewItemCheckBoxBrush}"
+                                                   DragForeground="{ThemeResource ListViewItemDragForeground}"
+                                                   DragOpacity="{ThemeResource ListViewItemDragThemeOpacity}"
+                                                   DragBackground="{ThemeResource ListViewItemDragBackground}" 
+                                                   DisabledOpacity="{ThemeResource ListViewItemDisabledThemeOpacity}" 
+                                                   FocusVisualPrimaryBrush="{TemplateBinding FocusVisualPrimaryBrush}"
+                                                   FocusVisualSecondaryThickness="{TemplateBinding FocusVisualSecondaryThickness}"
+                                                   FocusBorderBrush="{ThemeResource ListViewItemFocusBorderBrush}" 
+                                                   FocusVisualMargin="{TemplateBinding FocusVisualMargin}" 
+                                                   FocusVisualPrimaryThickness="{TemplateBinding FocusVisualPrimaryThickness}" 
+                                                   FocusSecondaryBorderBrush="{ThemeResource ListViewItemFocusSecondaryBorderBrush}" 
+                                                   FocusVisualSecondaryBrush="{TemplateBinding FocusVisualSecondaryBrush}" 
+                                                   HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" 
+                                                   Control.IsTemplateFocusTarget="True" 
+                                                   PointerOverForeground="{ThemeResource ListViewItemForegroundPointerOver}"
+                                                   PressedBackground="{ThemeResource ListViewItemBackgroundPressed}" 
+                                                   PlaceholderBackground="{ThemeResource ListViewItemPlaceholderBackground}"
+                                                   PointerOverBackground="{ThemeResource ListViewItemBackgroundPointerOver}" 
+                                                   ReorderHintOffset="{ThemeResource ListViewItemReorderHintThemeOffset}" 
+                                                   SelectedPressedBackground="{ThemeResource ListViewItemBackgroundSelectedPressed}" 
+                                                   SelectionCheckMarkVisualEnabled="{ThemeResource ListViewItemSelectionCheckMarkVisualEnabled}" 
+                                                   SelectedForeground="{ThemeResource ListViewItemForegroundSelected}" 
+                                                   SelectedPointerOverBackground="{ThemeResource ListViewItemBackgroundSelectedPointerOver}" 
+                                                   SelectedBackground="{ThemeResource ListViewItemBackgroundSelected}" 
+                                                   VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>-->
+            </Style>
+        </ResourceDictionary>
+
     </Page.Resources>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
@@ -68,56 +119,69 @@
                           Label="Remove"
                           Click="RemoveDictAppBarButton_Click"/>
         </CommandBar>
-        
+
         <ListView Name="DictionaryListView"                  
                   Grid.Row="1"
-                  SelectionChanged="DictionaryListView_SelectionChanged"
-                  HorizontalAlignment="Stretch"
-                  ItemsSource="{x:Bind localDicts}">
+                  SelectionChanged="DictionaryListView_SelectionChanged"                  
+                  ItemsSource="{x:Bind localDicts}"                  
+                  ItemContainerStyle="{StaticResource DictionaryListViewContainerTemplateStyle}">
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="models:Dict">
-                    <StackPanel HorizontalAlignment="Stretch">
+                    <Grid HorizontalAlignment="Stretch">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+
                         <TextBlock Name="BookNameTextBlock"
-                                   HorizontalAlignment="Stretch"
+                                   Grid.ColumnSpan="2"                                   
                                    Style="{StaticResource HeaderText}"
                                    TextTrimming="CharacterEllipsis"
                                    TextWrapping="NoWrap"
                                    Text="{x:Bind BookName}"/>
-                    <Grid>
-                            <StackPanel Orientation="Horizontal"                                        
-                                        HorizontalAlignment="Left">
-                                <TextBlock FontFamily="Segoe MDL2 Assets"
+
+                        <StackPanel Orientation="Horizontal"
+                                    HorizontalAlignment="Left"
+                                        Grid.Row="1"
+                                        Grid.Column="0">
+                            <TextBlock FontFamily="Segoe MDL2 Assets"
                                            Text="&#xE8C1;"
                                            Margin="4"/>
-                                <TextBlock Name="WordCountTextBlock" 
+                            <TextBlock Name="WordCountTextBlock" 
                                            Style="{StaticResource CaptionText}"
                                            Text="{x:Bind WordCount}"
                                            Margin="0,4"/>
-                                <TextBlock Text="entries"
+                            <TextBlock Text="entries"
                                            Margin="4"
                                            Style="{StaticResource CaptionText}" />
-                            </StackPanel>
-                            <StackPanel Orientation="Horizontal"                                        
-                                        HorizontalAlignment="Right">
-                                <TextBlock FontFamily="Segoe MDL2 Assets"
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal"
+                                    HorizontalAlignment="Right"
+                                        Grid.Column="1"
+                                        Grid.Row="1">
+                            <TextBlock FontFamily="Segoe MDL2 Assets"
                                            Text="&#xE152;"
                                            Margin="4"/>
-                                <TextBlock Name="FileSizeTextBlock" 
+                            <TextBlock Name="FileSizeTextBlock" 
                                            HorizontalAlignment="Right"
                                            Style="{StaticResource CaptionText}"
                                            Text="{x:Bind DictSize}"
                                            Margin="0,4"/>
-                                <TextBlock Text="bytes"
+                            <TextBlock Text="bytes"
                                            Margin="4"
                                            Style="{StaticResource CaptionText}" />
-                            </StackPanel>
-                    
+                        </StackPanel>
+
+
                     </Grid>
-                    </StackPanel>
                 </DataTemplate>
             </ListView.ItemTemplate>
-            
-        </ListView> 
 
-    </Grid>    
+        </ListView>
+
+    </Grid>
 </Page>
