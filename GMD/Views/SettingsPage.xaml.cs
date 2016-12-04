@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GMD.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -25,6 +26,19 @@ namespace GMD.Views
         public SettingsPage()
         {
             this.InitializeComponent();
+            this.DefinitionFontSizeSlider.ValueChanged += (s, e) => DefinitionFontSizeSlider_ValueChanged(s, e);
         }
+
+        private void ThemeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e) =>
+            Settings.SetRequestedTheme((Settings.ThemeSettings) ThemeComboBox.SelectedIndex);
+
+        private void DefinitionFontSizeSlider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e) =>
+            Settings.SetDefinitionFontSize((int)Math.Round(e.NewValue));
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            DefinitionFontSizeSlider.Value = Settings.GetDefinitionFontSize();
+            ThemeComboBox.SelectedIndex = Settings.GetRequestedThemeSetting();            
+        }        
     }
 }

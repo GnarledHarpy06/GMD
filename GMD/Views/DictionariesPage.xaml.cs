@@ -40,19 +40,24 @@ namespace GMD.Views
             localDicts.Clear();
             foreach (Dict newDict in App.DictsManager.Dicts)
                 localDicts.Add(newDict);
+            DictsCheck();
         }
 
-        private void AddDictAppBarButton_Click(object sender, RoutedEventArgs e)
+        private async void AddDictAppBarButton_Click(object sender, RoutedEventArgs e)
         {
-            App.DictsManager.AddDictAsync();
+            DictionaryPageProgressRing.IsActive = true;
+            await App.DictsManager.AddDictAsync();
+            DictionaryPageProgressRing.IsActive = false;
         }
 
-        private void RemoveDictAppBarButton_Click(object sender, RoutedEventArgs e)
+        private async void RemoveDictAppBarButton_Click(object sender, RoutedEventArgs e)
         {
-            App.DictsManager.RemoveDictAsync(
+            DictionaryPageProgressRing.IsActive = true;
+            await App.DictsManager.RemoveDictAsync(
                 (DictionaryListView.ItemsSource as ObservableCollection<Dict>)
                 .ElementAtOrDefault(DictionaryListView.SelectedIndex)
                 .DictID);
+            DictionaryPageProgressRing.IsActive = false;
 
             // get DictionaryListView ItemSource, get the selectedItem through selectedIndex
             // get the dictID from selectedItem
@@ -61,7 +66,7 @@ namespace GMD.Views
 
         private void DictionaryListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (!DictionaryListView.SelectedIndex.Equals(null))
+            if (DictionaryListView.SelectedIndex != -1)
                 RemoveDictAppBarButton.IsEnabled = true;
             else
                 RemoveDictAppBarButton.IsEnabled = false;
@@ -71,5 +76,13 @@ namespace GMD.Views
         {
             
         }
+
+        void DictsCheck()
+        {
+            if (App.DictsManager.Dicts.Where(d => d.IsQueried).Count() < 1)
+                NoDictWarning.Visibility = Visibility.Visible;
+            else
+                NoDictWarning.Visibility = Visibility.Collapsed;
+        }        
     }
 }

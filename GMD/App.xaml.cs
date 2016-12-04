@@ -40,7 +40,7 @@ namespace GMD
         {
             this.InitializeComponent();
             this.Suspending += OnSuspending;
-            
+            this.RequestedTheme = Settings.GetRequestedTheme();
         }
 
         /// <summary>

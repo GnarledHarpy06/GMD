@@ -53,7 +53,8 @@ namespace GMD.ViewModels
 
         public void AddFavouriteEntry(Entry favouriteEntry)
         {
-            if (FavouriteEntries.Where(e => (e.DictId == favouriteEntry.DictId) && (e.WordStr == favouriteEntry.WordStr)).Count() == 0)
+            if (FavouriteEntries.Where(e => (e.DictId == favouriteEntry.DictId)
+            && (e.WordStr == favouriteEntry.WordStr)).Count() == 0)
             {
                 FavouriteEntry FE = new FavouriteEntry(favouriteEntry);
                 FavouriteEntries.Add(FE);

@@ -116,7 +116,7 @@
                 </CommandBar.Content>
             </CommandBar>
             <ListView x:Name="FavouriteEntriesListView"
-                      Grid.Row="2"
+                      Grid.Row="1"
                       IsItemClickEnabled="True"
                       ItemClick="FavouriteEntriesListView_ItemClick">
                 <ListView.ItemTemplate>
@@ -126,7 +126,20 @@
                                        TextTrimming="CharacterEllipsis"/>
                     </DataTemplate>
                 </ListView.ItemTemplate>
-            </ListView>           
+            </ListView>
+            <StackPanel x:Name="NoEntriesWarning"
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Visibility="Collapsed">
+                <FontIcon FontFamily="Segoe MDL2 Assets"
+                          Glyph="&#xE195;"
+                          FontSize="72"
+                          Foreground="{ThemeResource SystemControlDisabledChromeHighBrush}"/>
+                <TextBlock Text="Currently you have nothing added to favorites."
+                           Foreground="{ThemeResource SystemControlDisabledChromeHighBrush}"/>                
+            </StackPanel>
         </Grid>
         <Frame x:Name="DetailFrame"
                    HorizontalAlignment="Stretch"

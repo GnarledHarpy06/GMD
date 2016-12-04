@@ -27,11 +27,24 @@ namespace GMD.Views
         {
             this.InitializeComponent();
             FavouriteEntriesListView.ItemsSource = App.EntriesManager.FavouriteEntries;
+            EntriesCheck();
+            App.EntriesManager.FavouriteEntries.CollectionChanged += (s, e) => EntriesCheck();
             DetailFrame.Navigate(typeof(DisplayPage_copy));
         }
 
-        private void FavouriteEntriesListView_ItemClick(object sender, ItemClickEventArgs e) =>
-            displayEntry(((FavouriteEntry)e.ClickedItem).ToEntry());        
+        private async void FavouriteEntriesListView_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            var tmp = ((FavouriteEntry)e.ClickedItem).ToEntry();
+            if (App.DictsManager.Dicts.Where(d => d.DictID == tmp.DictId).Count() == 1)
+                displayEntry(tmp);
+            else
+            {
+                var dialog = new Windows.UI.Popups.MessageDialog("The dictionary for this entry isn't accessible.", "Sorry");
+                dialog.Commands.Add(new Windows.UI.Popups.UICommand("Ok") { });
+                await dialog.ShowAsync();
+            }
+
+        }
 
         private void displayEntry(Entry clickedEntry)
         {
@@ -49,7 +62,20 @@ namespace GMD.Views
             }
         }
 
-        protected override void OnNavigatedFrom(NavigationEventArgs e) =>        
-            VisualStateManager.GoToState(this, MasterState.Name, true);
+        void EntriesCheck()
+        {
+            if (App.EntriesManager.FavouriteEntries.Count() < 1)
+            {
+                NoEntriesWarning.Visibility = Visibility.Visible;
+            }
+            else
+                NoEntriesWarning.Visibility = Visibility.Collapsed;
+        }
+
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            if (AdaptiveStates.CurrentState == NarrowState)
+                VisualStateManager.GoToState(this, MasterState.Name, true);
+        }
     }
 }

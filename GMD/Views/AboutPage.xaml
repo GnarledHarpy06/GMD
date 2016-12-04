@@ -40,11 +40,17 @@
 
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <RowDefinition />
+            <RowDefinition Height="8" />
+            <RowDefinition Height="Auto" />            
         </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="8" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
 
         <CommandBar x:Name="AboutPageCommandBar"
-                    Grid.Row="0">
+                    Grid.Row="0"
+                    Grid.ColumnSpan="2">
             <CommandBar.Content>
                 <TextBlock x:Name="AboutPageHeaderTextBlock"
                            Text="About"
@@ -52,6 +58,41 @@
                            Style="{StaticResource TitleText}"/>
             </CommandBar.Content>
         </CommandBar>
+        <StackPanel Grid.Row="2"
+                    Grid.Column="1"
+                    HorizontalAlignment="Left">
+            <TextBlock Text="GMD version 0.0.1a"
+                       Margin="0,4,0,0"
+                       Style="{StaticResource TitleText}"/>
+            <TextBlock Text="Copyright © 2016 Giovan Isa Musthofa"/>
+            <TextBlock Text="All Rights reserved"/>
+            <Button Content="Send your feedback"
+                    Visibility="Collapsed"
+                    Margin="0,12,0,0"/>
+            <!--
+                Send your feedback disabled to avoid 
+                confusion between feedback and the survey.
+            -->
+            <TextBlock Text="The research"
+                       Margin="0,24,0,0"
+                       Style="{StaticResource TitleText}"/>
+            <TextBlock Text="This app was made to fulfill a science project"/>
+            <TextBlock Text="research. Show your love for the developer by"/>
+            <TextBlock Text="filling and submitting this form."/>
+            <HyperlinkButton NavigateUri=""
+                             Margin="0,12,0,0"
+                             Padding="0">
+                <Button Content="Take the survey"/>
+            </HyperlinkButton>
+            <TextBlock Text="Giovan Isa Musthofa"
+                       Margin="0,24,0,0"
+                       Style="{StaticResource TitleText}"/>
+            <HyperlinkButton NavigateUri="http://www.giovanand.hol.es"
+                             Padding="0">
+                <TextBlock Text="Visit my website"
+                           Style="{StaticResource BodyText}"/>
+            </HyperlinkButton>
 
+        </StackPanel>
     </Grid>
 </Page>

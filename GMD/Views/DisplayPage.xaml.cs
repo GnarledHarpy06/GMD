@@ -1,4 +1,5 @@
 ﻿using GMD.Models;
+using GMD.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -30,11 +31,12 @@ namespace GMD.Views
         {
             this.InitializeComponent();
             FollowUpRebind();
-            DisplayedEntry.PropertyChanged += (s, e) => this.FollowUpRebind();            
+            DisplayedEntry.PropertyChanged += (s, e) => this.FollowUpRebind();
         }        
         
         void FollowUpRebind()
         {
+            EntryDefinitionRichTextBlock.FontSize = Settings.GetDefinitionFontSize(); // tfw best practice :p
             EntryDefinitionRichTextBlock.Blocks.Clear();
 
             foreach (var item in DisplayedEntry.Definition)

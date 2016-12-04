@@ -30,7 +30,7 @@ namespace GMD.Views
             this.InitializeComponent();
             RecentEntriesListView.ItemsSource = App.EntriesManager.ViewedEntries;
             QueryListView.ItemsSource = App.EntriesManager.CollectionMatchedOfKeywordsByBookName;
-            DetailFrame.Navigate(typeof(DisplayPage));
+            DetailFrame.Navigate(typeof(DisplayPage));            
         }
 
         private void QueryTextBox_TextChanged(object sender, TextChangedEventArgs e)
@@ -51,21 +51,28 @@ namespace GMD.Views
             Loaded -= SearchPage_Loaded;
             App.EntriesManager.ConstructAsync();
             // tfw best practice :p
+            VisualStateManager.GoToState(this, QueryState.Name, true);
             QueryTextBox.Focus(FocusState.Programmatic);
+            DictsCheck();
+            App.DictsManager.DictDatabaseChanged += (s, f) => DictsCheck();
         }
-                
-        private void AdaptiveStates_CurrentStateChanged(object sender, VisualStateChangedEventArgs e)
-        {            
-        }        
 
         private void QueryListView_ItemClick(object sender, ItemClickEventArgs e)
         {
-            displayEntry(App.EntriesManager.GetEntry((WordStrByBookName)e.ClickedItem));
+            displayEntry(App.EntriesManager.GetEntry((WordStrByBookName)e.ClickedItem));            
         }
 
-        private void RecentEntriesListView_ItemClick(object sender, ItemClickEventArgs e)
+        private async void RecentEntriesListView_ItemClick(object sender, ItemClickEventArgs e)
         {
-            displayEntry(((RecentEntry)e.ClickedItem).ToEntry());
+            var tmp = ((RecentEntry)e.ClickedItem).ToEntry();
+            if(App.DictsManager.Dicts.Where(d => d.DictID == tmp.DictId).Count() == 1)
+                displayEntry(tmp);
+            else
+            {
+                var dialog = new Windows.UI.Popups.MessageDialog("The dictionary for this entry isn't accessible.", "Sorry");
+                dialog.Commands.Add(new Windows.UI.Popups.UICommand("Ok") { });
+                await dialog.ShowAsync();
+            }            
         }
 
         private void displayEntry(Entry clickedEntry)
@@ -88,8 +95,31 @@ namespace GMD.Views
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
-            VisualStateManager.GoToState(this, MasterState.Name, true);
+            if (AdaptiveStates.CurrentState == NarrowState)
+                VisualStateManager.GoToState(this, MasterState.Name, true);
+            VisualStateManager.GoToState(this, RecentEntriesState.Name, true);
             QueryTextBox.Text = "";
         }
+
+        void DictsCheck()
+        {
+            if ((App.DictsManager.Dicts.Where(d => d.IsQueried).Count() < 1) && (QueryStates.CurrentState == QueryState))
+            {
+                NoDictWarning.Visibility = Visibility.Visible;                
+            }
+            else
+                NoDictWarning.Visibility = Visibility.Collapsed;
+        }
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {            
+        }
+
+        private void AdaptiveStates_CurrentStateChanged(object sender, VisualStateChangedEventArgs e)
+        {
+        }
+
+        private void HyperlinkButton_Click(object sender, RoutedEventArgs e) =>
+            this.Frame.Navigate(typeof(DictionariesPage));        
     }    
 }

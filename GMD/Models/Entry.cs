@@ -76,47 +76,54 @@ namespace GMD.Models
         public DisplayEntry(Entry entry)
         {
             Dict entryDict = new ManageDicts().Dicts.Where(p => p.DictID == entry.DictId).FirstOrDefault();
-            DictId = entryDict.DictID;
-            BookName = entryDict.BookName;
-            WordStr = entry.WordStr;
-            wordDataOffset = entry.wordDataOffset;
-            wordDataSize = entry.wordDataSize;
-            
-            string dictPath = entryDict.dictPath;
-
-            using (FileStream fileStream = new FileStream(dictPath, FileMode.Open, FileAccess.Read))
+            if (entryDict != null)
             {
-                byte[] buffer = new byte[entry.wordDataSize]; // create buffer
-                int seekOffset = checked((int)UInt64.Parse(entry.wordDataOffset));
-                int length = checked((int)entry.wordDataSize);
+                DictId = entryDict.DictID;
+                BookName = entryDict.BookName;
+                WordStr = entry.WordStr;
+                wordDataOffset = entry.wordDataOffset;
+                wordDataSize = entry.wordDataSize;
 
-                fileStream.Seek(seekOffset, SeekOrigin.Begin);
-                fileStream.Read(buffer, 0, length);
+                string dictPath = entryDict.dictPath;
 
-                string charString = DataConversion.GetString(buffer);
+                using (FileStream fileStream = new FileStream(dictPath, FileMode.Open, FileAccess.Read))
+                {
+                    byte[] buffer = new byte[entry.wordDataSize]; // create buffer
+                    int seekOffset = checked((int)UInt64.Parse(entry.wordDataOffset));
+                    int length = checked((int)entry.wordDataSize);
 
-                Definition = new List<Paragraph>();
-                Paragraph[] paragraphs = DataConversion.FormatDefinition(charString, entryDict.sameTypeSequence);
+                    fileStream.Seek(seekOffset, SeekOrigin.Begin);
+                    fileStream.Read(buffer, 0, length);
 
-                foreach (Paragraph paragraph in paragraphs)                
-                    Definition.Add(paragraph);                
-            }
+                    string charString = DataConversion.GetString(buffer);
+
+                    Definition = new List<Paragraph>();
+                    Paragraph[] paragraphs = DataConversion.FormatDefinition(charString, entryDict.sameTypeSequence);
+
+                    foreach (Paragraph paragraph in paragraphs)
+                        Definition.Add(paragraph);
+                }
+            }            
         }
 
         public void UpdateEntry(Entry entry)
         {
-            DisplayEntry newEntry = new DisplayEntry(entry);
-            this.WordStr = newEntry.WordStr;
-            this.BookName = newEntry.BookName;
-            this.DictId = newEntry.DictId;
-            this.wordDataOffset = newEntry.wordDataOffset;
-            this.wordDataSize = newEntry.wordDataSize;
+            try
+            {
+                DisplayEntry newEntry = new DisplayEntry(entry);
+                this.WordStr = newEntry.WordStr;
+                this.BookName = newEntry.BookName;
+                this.DictId = newEntry.DictId;
+                this.wordDataOffset = newEntry.wordDataOffset;
+                this.wordDataSize = newEntry.wordDataSize;
 
-            this.Definition.Clear();
-            foreach(Paragraph p in newEntry.Definition)
-                this.Definition.Add(p);                       
+                this.Definition.Clear();
+                foreach (Paragraph p in newEntry.Definition)
+                    this.Definition.Add(p);
 
-            RaisePropertyChanged("Current Entry Changed");
+                RaisePropertyChanged("Current Entry Changed");
+            }
+            catch (NullReferenceException) { }
         }
 
         public void UpdateEntry(DisplayEntry newEntry)

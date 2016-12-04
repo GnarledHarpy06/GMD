@@ -9,7 +9,7 @@
     
     -->
 
-    <SolidColorBrush x:Key="SplitViewBackgroundBrush" Color="{ThemeResource SystemChromeHighColor}" /> <!-- This is the solution for now -->
+    <SolidColorBrush x:Key="SplitViewBackgroundBrush" Color="{ThemeResource SystemChromeLowColor}" />
     <SolidColorBrush x:Key="SplitViewForegroundBrush" Color="{ThemeResource SystemBaseHighColor}" />
     <SolidColorBrush x:Key="NavButtonPressedBackgroundBrush" Color="{ThemeResource SystemListMediumColor}" />
     <SolidColorBrush x:Key="NavButtonHoverBackgroundBrush" Color="{ThemeResource SystemListLowColor}" />

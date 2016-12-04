@@ -4,7 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:GMD.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"        
     mc:Ignorable="d">
 
     <Page.Resources>
@@ -40,11 +40,22 @@
 
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="8" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="8" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="8" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
 
         <CommandBar x:Name="SettingsPageCommandBar"
-                    Grid.Row="0">
+                    Grid.Row="0"
+                    Grid.ColumnSpan="2">
             <CommandBar.Content>
                 <TextBlock x:Name="SettingsPageHeaderTextBlock"
                            Text="Settings"
@@ -52,6 +63,37 @@
                            Style="{StaticResource TitleText}"/>
             </CommandBar.Content>
         </CommandBar>
+
+        <TextBlock Grid.Row="2"
+                   Grid.Column="1"
+                   Text="Theme"
+                   Style="{StaticResource TitleText}" />
+
+        <ComboBox x:Name="ThemeComboBox"
+                  Grid.Row="3"
+                  Grid.Column="1"
+                  Width="175"
+                  SelectionChanged="ThemeComboBox_SelectionChanged">
+            <ComboBoxItem Content="Light Theme" />
+            <ComboBoxItem Content="Dark Theme" />
+            <ComboBoxItem Content="System Setting" />
+        </ComboBox>
+
+        <TextBlock Grid.Row="5"
+                   Grid.Column="1"
+                   Text="Definition Font Size"
+                   Style="{StaticResource TitleText}" />
+
+        <Slider x:Name="DefinitionFontSizeSlider"
+                HorizontalAlignment="Left"
+                Width="320"
+                Grid.Row="6"
+                Grid.Column="1"
+                Minimum="12"
+                Maximum="36"                
+                TickPlacement="Inline">
+        </Slider>
+
 
     </Grid>
 </Page>

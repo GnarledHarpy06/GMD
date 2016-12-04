@@ -89,7 +89,7 @@ namespace GMD.ViewModels
                 return null;            
         }
 
-        public async void AddDictAsync()
+        public async Task AddDictAsync()
         {
             StorageFile file = await pickAFileAsync();
             string extractionFolder;
@@ -139,13 +139,13 @@ namespace GMD.ViewModels
                     wordStrDBIndexes[i] = new WordStrDBIndex() { WordStr = wordStrs[i], DictId = newDict.DictID };
                 
                 connection.InsertAll(wordStrDBIndexes);                
-                RaiseDictDatabaseChanged("Added");
+                RaiseDictDatabaseChanged("Added");                
             }
-            finally { }
+            catch (ArgumentNullException) { }
 
         }
 
-        public async void RemoveDictAsync(int dictID)
+        public async Task RemoveDictAsync(int dictID)
         {
             var pathToDelete = connection.Get<Dict>(dictID).Directory;
             var folderToDelete = await StorageFolder.GetFolderFromPathAsync(pathToDelete);

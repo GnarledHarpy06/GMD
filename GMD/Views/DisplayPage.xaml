@@ -108,7 +108,7 @@
                                Foreground="WhiteSmoke"
                                Margin="8,0,0,8"
                                Text="{x:Bind DisplayedEntry.WordStr}"
-                               Style="{StaticResource SubheaderText}" />
+                               Style="{StaticResource HeaderText}" />
                 </Grid>
                 <RichTextBlock Grid.Row="1"
                                x:Name="EntryDefinitionRichTextBlock"

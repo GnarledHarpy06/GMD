@@ -1,4 +1,5 @@
 ﻿using GMD.Models;
+using GMD.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -42,6 +43,7 @@ namespace GMD.Views
 
         void FollowUpRebind()
         {
+            EntryDefinitionRichTextBlock.FontSize = Settings.GetDefinitionFontSize(); // tfw best practice :p
             EntryDefinitionRichTextBlock.Blocks.Clear();
 
             foreach (var item in DisplayedEntry.Definition)
