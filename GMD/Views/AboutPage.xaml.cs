@@ -26,5 +26,11 @@ namespace GMD.Views
         {
             this.InitializeComponent();
         }
+
+        private async void SurveyButton_Click(object sender, RoutedEventArgs e)
+        {
+            var uri = new Uri(@"http://www.giovanand.hol.es/gmd-the-survey");
+            await Windows.System.Launcher.LaunchUriAsync(uri);
+        }
     }
 }

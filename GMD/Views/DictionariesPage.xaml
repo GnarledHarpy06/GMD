@@ -109,7 +109,12 @@
                            Margin="8"
                            Style="{StaticResource TitleText}"/>
             </CommandBar.Content>
-
+            <AppBarButton x:Name="DownloadAppBarButton"
+                          Icon="Download"
+                          Label="Download"
+                          Click="DownloadAppBarButton_Click">
+            </AppBarButton>
+            <AppBarSeparator />
             <AppBarButton Name="AddDictAppBarButton"
                           Icon="Add"
                           Label="Add"
@@ -202,7 +207,7 @@
                        Foreground="{ThemeResource SystemControlDisabledChromeHighBrush}"/>
                 <HyperlinkButton HorizontalAlignment="Center"
                                  Padding="4,0,0,0"
-                                 NavigateUri="http://www.giovanand.hol.es/">
+                                 NavigateUri="http://www.giovanand.hol.es/gmd-library">
                     <TextBlock Text="our library."
                            Style="{StaticResource BodyText}"/>
                 </HyperlinkButton>

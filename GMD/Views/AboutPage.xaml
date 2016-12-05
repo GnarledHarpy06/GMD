@@ -79,11 +79,11 @@
             <TextBlock Text="This app was made to fulfill a science project"/>
             <TextBlock Text="research. Show your love for the developer by"/>
             <TextBlock Text="filling and submitting this form."/>
-            <HyperlinkButton NavigateUri=""
-                             Margin="0,12,0,0"
-                             Padding="0">
-                <Button Content="Take the survey"/>
-            </HyperlinkButton>
+            <Button x:Name="SurveyButton"
+                    Content="Take the survey"                    
+                    Margin="0,12,0,0"                    
+                    Click="SurveyButton_Click">
+            </Button>
             <TextBlock Text="Giovan Isa Musthofa"
                        Margin="0,24,0,0"
                        Style="{StaticResource TitleText}"/>

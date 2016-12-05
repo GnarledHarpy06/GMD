@@ -191,7 +191,7 @@
                            Foreground="{ThemeResource SystemControlDisabledChromeHighBrush}"/>
                 <HyperlinkButton Click="HyperlinkButton_Click"
                                  HorizontalAlignment="Center"
-                                 Padding="9">
+                                 Padding="0">
                     <TextBlock Text="Add dictionary"
                                Style="{StaticResource BodyText}"/>
                 </HyperlinkButton>

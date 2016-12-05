@@ -54,8 +54,7 @@ namespace GMD.Views
         {
             DictionaryPageProgressRing.IsActive = true;
             await App.DictsManager.RemoveDictAsync(
-                (DictionaryListView.ItemsSource as ObservableCollection<Dict>)
-                .ElementAtOrDefault(DictionaryListView.SelectedIndex)
+                ((Dict)DictionaryListView.SelectedItem)
                 .DictID);
             DictionaryPageProgressRing.IsActive = false;
 
@@ -66,7 +65,7 @@ namespace GMD.Views
 
         private void DictionaryListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (DictionaryListView.SelectedIndex != -1)
+            if (DictionaryListView.SelectedItem != null)
                 RemoveDictAppBarButton.IsEnabled = true;
             else
                 RemoveDictAppBarButton.IsEnabled = false;
@@ -83,6 +82,12 @@ namespace GMD.Views
                 NoDictWarning.Visibility = Visibility.Visible;
             else
                 NoDictWarning.Visibility = Visibility.Collapsed;
-        }        
+        }
+
+        private async void DownloadAppBarButton_Click(object sender, RoutedEventArgs e)
+        {
+            var uri = new Uri(@"http://www.giovanand.hol.es/gmd-library");
+            await Windows.System.Launcher.LaunchUriAsync(uri);
+        }
     }
 }
