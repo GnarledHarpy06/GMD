@@ -2,7 +2,6 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.ComponentModel;
 using System.Collections.Generic;
 using Windows.UI.Xaml.Documents;
@@ -25,8 +24,8 @@ namespace GMD.Models
         public string BookName { get; set; }
     }
 
-    /* Two classes above only serves for mundane purpose
-     * Better fix it later
+    /* Two classes above only serves for trivial purpose
+     * Better fix them later
      */
 
     public class Entry : WordStrDBIndex
@@ -44,22 +43,7 @@ namespace GMD.Models
                 wordDataSize = this.wordDataSize
             };
         }
-    }
-
-    //public class EntriesGrouping : System.Linq.IGrouping<string, Entry>
-    //{
-    //    public ObservableCollection<Entry> Entries;
-    //    public string BookName { private get ; set; }
-
-    //    public string Key
-    //    { get { return BookName; } }
-
-    //    public IEnumerator<Entry> GetEnumerator() =>
-    //        Entries.GetEnumerator();
-
-    //    IEnumerator IEnumerable.GetEnumerator() =>
-    //        Entries.GetEnumerator();
-    //}
+    }    
 
     public class DisplayEntry : Entry, INotifyPropertyChanged
     {
@@ -178,7 +162,7 @@ namespace GMD.Models
         {
             /* It won't be a proper sorting algorithm
              * since this specifications have a number of exact rules
-             * we can use to simplify things :p
+             * we can use to simplify things
              */
 
             var tmpArray = recententries.ToArray();

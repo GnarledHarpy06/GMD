@@ -1,14 +1,9 @@
 ﻿using GMD.Models;
 using SQLite.Net;
 using SQLite.Net.Platform.WinRT;
-using System;
 using System.Collections.ObjectModel;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using Windows.Storage;
 
 namespace GMD.ViewModels
@@ -150,17 +145,20 @@ namespace GMD.ViewModels
                 int lengthOffset = offsetOffset + offsetLength;
                 int lengthLength = 4;
                 
-                wordDataOffset = DataConversion.GetUInt64(arrayOfAllQueriedIdxByteArray[dict.DictID].SubsByteArray(offsetOffset, offsetLength)).ToString();
-                wordDataSize = DataConversion.GetUInt32(arrayOfAllQueriedIdxByteArray[dict.DictID].SubsByteArray(lengthOffset, lengthLength));
-                
+                wordDataOffset = DataConversion.GetUInt64(arrayOfAllQueriedIdxByteArray[dict.DictID]
+                    .SubsByteArray(offsetOffset, offsetLength)).ToString();
+                wordDataSize = DataConversion.GetUInt32(arrayOfAllQueriedIdxByteArray[dict.DictID]
+                    .SubsByteArray(lengthOffset, lengthLength));                
             }
             else
             {
                 int lengthOffset = offsetOffset + offsetLength;
                 int lengthLength = 4;
 
-                wordDataOffset = DataConversion.GetUInt32(arrayOfAllQueriedIdxByteArray[dict.DictID].SubsByteArray(offsetOffset, offsetLength)).ToString();
-                wordDataSize = DataConversion.GetUInt32(arrayOfAllQueriedIdxByteArray[dict.DictID].SubsByteArray(lengthOffset, lengthLength));
+                wordDataOffset = DataConversion.GetUInt32(arrayOfAllQueriedIdxByteArray[dict.DictID]
+                    .SubsByteArray(offsetOffset, offsetLength)).ToString();
+                wordDataSize = DataConversion.GetUInt32(arrayOfAllQueriedIdxByteArray[dict.DictID]
+                    .SubsByteArray(lengthOffset, lengthLength));
             }
 
             return new Entry()
@@ -170,99 +168,7 @@ namespace GMD.ViewModels
                 wordDataOffset = wordDataOffset,
                 wordDataSize = wordDataSize
             };                        
-        }
-
-        public void QueryKeywords2(string keyword)
-        {
-            /* A failed attempt to optimize query
-            */
-
-            if (arrayOfAllQueriedWordStrsIndex == null)
-                return;
-            var keywordByteArray = DataConversion.GetBytes(keyword);
-            List<WordStrByBookName> listWSBK = new List<WordStrByBookName>();
-
-            for (int i = 0; i < arrayOfAllQueriedIdxByteArray.Count(); i++)
-            {
-                if(arrayOfAllQueriedIdxByteArray[i] != null)
-                {
-                    string[] arrayOfKeywords = new string[50];
-
-                    int offsetLength;
-                    string bookName = connection.Get<Dict>(i).BookName;
-                    if (connection.Get<Dict>(i).idxOffsetBits == Dict.idxOffsetBitsEnum.Uint64)
-                        offsetLength = 8;
-                    else
-                        offsetLength = 4;
-
-                    int pointer = 0;
-
-                    if (BitConverter.IsLittleEndian && offsetLength == 4)
-                    {
-                        for (int j = 0; i < 50; j++)
-                        {
-                            int pointer2 = arrayOfAllQueriedIdxByteArray[i].QueryLocate32(keywordByteArray, pointer);
-                            if (pointer2 == -1) break;
-                            int pointer3 = arrayOfAllQueriedIdxByteArray[i].Locate(0x00, pointer2);
-
-                            byte[] wordStrByteArray = arrayOfAllQueriedIdxByteArray[i].SubsByteArray(pointer2, pointer3);
-                            arrayOfKeywords[j] = Encoding.UTF8.GetString(wordStrByteArray);
-
-                            pointer = pointer3 + offsetLength + 4 + 1;
-                        }
-                    }
-                    else if (BitConverter.IsLittleEndian && offsetLength == 8)
-                    {
-                        for (int j = 0; i < 50; j++)
-                        {
-                            int pointer2 = arrayOfAllQueriedIdxByteArray[i].QueryLocate64(keywordByteArray, pointer);
-                            if (pointer2 == -1) break;
-                            int pointer3 = arrayOfAllQueriedIdxByteArray[i].Locate(0x00, pointer2);
-
-                            byte[] wordStrByteArray = arrayOfAllQueriedIdxByteArray[i].SubsByteArray(pointer2, pointer3);
-                            arrayOfKeywords[j] = Encoding.UTF8.GetString(wordStrByteArray);
-
-                            pointer = pointer3 + offsetLength + 8 + 1;
-                        }
-                    }
-                    else if(!BitConverter.IsLittleEndian && offsetLength == 4)
-                    {
-                        for (int j = 0; i < 50; i++)
-                        {
-                            int pointer2 = arrayOfAllQueriedIdxByteArray[i].QueryLocate32(keywordByteArray, pointer);
-                            if (pointer2 == -1) break;
-                            int pointer3 = arrayOfAllQueriedIdxByteArray[i].Locate(0x00, pointer2);
-
-                            byte[] wordStrByteArray = arrayOfAllQueriedIdxByteArray[i].SubsByteArray(pointer2, pointer3);
-                            arrayOfKeywords[j] = Encoding.BigEndianUnicode.GetString(wordStrByteArray);
-
-                            pointer = pointer3 + offsetLength + 4 + 1;
-                        }
-                    }
-                    else
-                    {
-                        for (int j = 0; i < 50; i++)
-                        {
-                            int pointer2 = arrayOfAllQueriedIdxByteArray[i].QueryLocate64(keywordByteArray, pointer);
-                            if (pointer2 == -1) break;
-                            int pointer3 = arrayOfAllQueriedIdxByteArray[i].Locate(0x00, pointer2);
-
-                            byte[] wordStrByteArray = arrayOfAllQueriedIdxByteArray[i].SubsByteArray(pointer2, pointer3);
-                            arrayOfKeywords[j] = Encoding.BigEndianUnicode.GetString(wordStrByteArray);
-
-                            pointer = pointer3 + offsetLength + 8 + 1;
-                        }
-                    }
-
-                    foreach (var item in arrayOfKeywords.Where(p => p != null).ToArray())
-                        listWSBK.Add(new WordStrByBookName() { WordStr = item, BookName = bookName });
-                }
-            }
-            listWSBK.Sort();            
-            foreach (var item in listWSBK)
-                CollectionMatchedOfKeywordsByBookName.Add(item);
-            CollectionMatchedOfKeywordsByBookName.Clear();
-        }
+        }        
 
         public void QueryKeywords(string keyword)
         {
@@ -308,6 +214,7 @@ namespace GMD.ViewModels
     {
         public string[] WordStrs { get; private set; }
         public int DictId { get; private set; }
+        //public string BookName { get; private set; } // Later implemented
 
         public WordStrsIndex() { }
 
@@ -334,7 +241,7 @@ namespace GMD.ViewModels
             CollectionMatchedOfEntries.Clear();
 
             var queryMatchingEntries = arrayOfAllQueriedEntries
-                .Where(p => searchPattern.Matches(p.wordStr).Count > 0); // RegEx implemetation
+                .Where(p => searchPattern.Matches(p.wordStr).Count > 0); // RegEx implemetation not used
             */
 
             string[] queriedWordStrs = this.WordStrs.Where(p => p.IndexOf(keyword) == 0).ToArray();

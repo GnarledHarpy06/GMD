@@ -40,10 +40,10 @@ namespace GMD.Models
         public string ifoPath { get; private set; }
         public string dictPath { get; private set; }
         public string idxPath { get; private set; }
-        public string synPath { get; private set; }
+        public string synPath { get; private set; } // unsupported
 
-        public string ifoOftPath { get; private set; }
-        public string synOftPath { get; private set; }
+        public string ifoOftPath { get; private set; } // unsupported
+        public string synOftPath { get; private set; } // unsupported
 
         // private string ifoCltPath { get; set; } // unsupported
         // private string synCltPath { get; set; } // unsupported
@@ -216,18 +216,7 @@ namespace GMD.Models
             DictSize = new DirectoryInfo(Directory).EnumerateFiles().Sum(file => file.Length);
             IsQueried = true;
         }
-
-        //public async Task<string> GetDictStrAsync()
-        //{
-        //    using (Stream stream = await
-        //                (await StorageFile.GetFileFromPathAsync(this.dictPath))
-        //                .OpenStreamForReadAsync())
-        //    using (StreamReader streamReader = new StreamReader(stream))
-        //    {
-        //        return await streamReader.ReadToEndAsync();
-        //    }
-        //} NOT USED
-
+        
         public byte[] GetIdxByteArray()
         {
             return File.ReadAllBytes(this.idxPath);
@@ -281,36 +270,7 @@ namespace GMD.Models
             }
             return arrayOfKeywords;
         }
-
-        //public void BuildDictionaryFromTableEntry(Dict entry)
-        //{
-        //    FolderName = entry.FolderName;
-        //    Directory = entry.Directory;
-        //    DictSize = entry.DictSize;
-
-        //    BookName = entry.BookName;
-        //    WordCount = entry.WordCount;
-        //    IdxFileSize = entry.IdxFileSize;
-        //    Author = entry.Author;
-        //    Email = entry.Email;
-        //    Website = entry.Website;
-        //    Description = entry.Description;
-        //    Date = entry.Date;
-
-        //    synWordCount = entry.synWordCount;
-        //    idxOffsetBits = entry.idxOffsetBits;
-        //    dictType = entry.dictType;
-        //    sameTypeSequence = entry.sameTypeSequence;
-
-        //    ifoPath = entry.ifoPath;
-        //    dictPath = entry.dictPath;
-        //    idxPath = entry.idxPath;
-        //    synPath = entry.synPath;
-
-        //    ifoOftPath = entry.ifoOftPath;
-        //    synOftPath = entry.synOftPath;
-        //}
-
+        
         private static string getStringValue(List<string> lines, string valueType)
         {
 
@@ -352,16 +312,4 @@ namespace GMD.Models
             return writePath;
         }        
     }
-
-    //public class Lemma
-    //{
-    //    [PrimaryKey, AutoIncrement]
-    //    private int lemmaId { get; set; }
-
-    //    private int dictId { get; set; }
-    //    public string wordStr { get; set; }
-    //    public string wordDataOft { get; set; }
-    //    public string wordDataSize { get; set; }
-
-    //}
 }

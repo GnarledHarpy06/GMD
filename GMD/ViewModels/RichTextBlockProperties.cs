@@ -1,26 +1,26 @@
 ﻿using HtmlAgilityPack;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
 using Windows.Data.Xml.Dom;
 using Windows.Data.Xml.Xsl;
-using Windows.Foundation;
-using Windows.Storage;
-using Windows.Storage.Streams;
 using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Documents;
-using Windows.UI.Xaml.Markup;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Shapes;
 
 namespace GMD.ViewModels
 {
+    /* Taken from Social Media Dashboard Sample by Brynte
+     * Apache License version 2.0
+     */
+
+
     /// <summary>
     /// Usage: 
     /// 1) In a XAML file, declare the above namespace, e.g.:

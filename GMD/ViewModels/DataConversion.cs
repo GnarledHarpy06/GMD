@@ -3,8 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using Windows.UI.Xaml.Documents;
 
 namespace GMD.ViewModels
@@ -44,7 +42,8 @@ namespace GMD.ViewModels
                 case Dict.TypeSequenceEnum.P:
                 case Dict.TypeSequenceEnum.X:                
                 default:
-                    unformattedDefinition = new string[] { "Sorry the data couldn't be formated correctly", "\n" , definition };
+                    unformattedDefinition = new string[] 
+                    { "Sorry the data couldn't be formated correctly", "\n" , definition };
                     foreach (string line in unformattedDefinition)
                     {
                         Paragraph p = new Paragraph();
@@ -53,7 +52,6 @@ namespace GMD.ViewModels
                     }
                     break;
             }
-
             return formattedDefinition.ToArray();
         }        
         
@@ -63,8 +61,8 @@ namespace GMD.ViewModels
                 ? Encoding.UTF8.GetString(self)
                 : Encoding.BigEndianUnicode.GetString(self);
 
-            // Constantly checking Endianness is not efficient,
-            // will leave it here but wont implement it
+            // Constantly checking Endianness every method call isn't efficient,
+            // will leave it here but wont use it
         }        
 
         public static byte[] GetBytes(string _string)
@@ -73,8 +71,7 @@ namespace GMD.ViewModels
                 ? Encoding.UTF8.GetBytes(_string)
                 : Encoding.BigEndianUnicode.GetBytes(_string);
 
-            // Constantly checking Endianness is not efficient,
-            // will leave it here but wont implement it
+            // the same goes here
         }
 
         public static byte[] GetBytes(char[] charArray)
@@ -83,7 +80,7 @@ namespace GMD.ViewModels
                 ? Encoding.UTF8.GetBytes(charArray)
                 : Encoding.BigEndianUnicode.GetBytes(charArray);
 
-            // The same goes here :)            
+            // the same goes here too
         }
 
         public static UInt64 GetUInt64(string Uint64Str)
@@ -150,21 +147,6 @@ namespace GMD.ViewModels
 
             return arrayOfWordStrsByBookName;
         }
-
-        //static public WordStrDBIndex[] GetWordStrDBIndexes( this WordStrsIndex self)
-        //{
-        //    WordStrDBIndex[] arrayOfWordStrDBIndexes = new WordStrDBIndex[self.WordStrs.Count()];
-        //    for (int i = 0; i < self.WordStrs.Count(); i++)
-        //    {
-        //        arrayOfWordStrDBIndexes[i] = new WordStrDBIndex()
-        //        {
-        //            WordStr = self.WordStrs[i],
-        //            DictId = self.DictId
-        //        };
-        //    }
-
-        //    return arrayOfWordStrDBIndexes;
-        //} NOT USED
     }
 
     static class ByteArrayRocks
@@ -173,7 +155,7 @@ namespace GMD.ViewModels
          * From StackOverflow
          * http://stackoverflow.com/questions/283456/byte-array-pattern-search
          * 
-         * With few edits, tweaks, and overloads by Gio
+         * With few edits, tweaks, and overloads by Giovan Isa Musthofa
          */
         static readonly int[] Empty = new int[0];
 

@@ -5,8 +5,6 @@ using SQLite.Net.Platform.WinRT;
 using System;
 using System.IO;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Pickers;
@@ -28,25 +26,6 @@ namespace GMD.ViewModels
             (ApplicationData.Current.LocalFolder.Path, "Dicts_db.sqlite");
         private SQLiteConnection connection;
         public ObservableCollection<Dict> Dicts = new ObservableCollection<Dict>();
-
-        //private static SQLiteConnection GetDatabaseConnection(string path)
-        //{
-        //    SQLiteConnection _connection;
-
-        //    if (!File.Exists(path))
-        //    {
-        //        _connection = new SQLiteConnection
-        //            (new SQLitePlatformWinRT(), path);
-        //        _connection.CreateTable<Dict>();
-        //    }
-        //    else
-        //    {
-        //        _connection = new SQLiteConnection
-        //            (new SQLitePlatformWinRT(), path);
-        //    }
-
-        //    return _connection;
-        //}
 
         private void getDatabaseConnection()
         {
@@ -135,7 +114,11 @@ namespace GMD.ViewModels
                     WordStrDBIndex[] wordStrDBIndexes = new WordStrDBIndex[newDict.WordCount];
 
                     for (int i = 0; i < newDict.WordCount; i++)
-                        wordStrDBIndexes[i] = new WordStrDBIndex() { WordStr = wordStrs[i], DictId = newDict.DictID };
+                        wordStrDBIndexes[i] = new WordStrDBIndex()
+                        {
+                            WordStr = wordStrs[i],
+                            DictId = newDict.DictID
+                        };
 
                     connection.Insert(newDict, newDict.GetType());
                     connection.InsertAll(wordStrDBIndexes);
@@ -169,15 +152,7 @@ namespace GMD.ViewModels
 
         public event PropertyChangedEventHandler DictDatabaseChanged;
 
-        protected virtual void RaiseDictDatabaseChanged(string propertyName)
-        {
-            //var handler = this.DictDatabaseChanged;
-            //if (handler != null)
-            //{
-            //    handler(this, new PropertyChangedEventArgs(propertyName));
-            //}
-
-            DictDatabaseChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+        protected virtual void RaiseDictDatabaseChanged(string propertyName) =>
+            DictDatabaseChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));        
     }
 }

@@ -7,6 +7,15 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     NavigationCacheMode="Enabled"
     mc:Ignorable="d">
+    
+    <!-- 
+        WARNING
+        NEVER EVER COPY CODES
+        Even though the resource cost isn't that expensive
+        Even though the it is bug free
+        
+        UNLESS YOU ARE ON A THIGHT DEADLINE         
+    -->
 
     <Page.Resources>
         <ResourceDictionary>

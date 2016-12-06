@@ -1,20 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using GMD;
 using GMD.Models;
-using GMD.ViewModels;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 using System.Collections.ObjectModel;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
@@ -66,7 +54,8 @@ namespace GMD.Views
                 .DictID);
             DictionaryPageProgressRing.IsActive = false;
 
-            // get DictionaryListView ItemSource, get the selectedItem through selectedIndex
+            // get DictionaryListView ItemSource
+            // get the dict by casting the SelectedItem
             // get the dictID from selectedItem
             // RemoveDictAsync(DictId)
         }

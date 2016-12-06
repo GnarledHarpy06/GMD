@@ -1,19 +1,8 @@
 ﻿using GMD.Models;
 using GMD.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -23,16 +12,7 @@ namespace GMD.Views
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
     public sealed partial class DisplayPage_copy : Page
-    {        
-        private DisplayEntry DisplayedEntry = App.CurrentEntry2;
-
-        public DisplayPage_copy()
-        {
-            this.InitializeComponent();            
-            FollowUpRebind();
-            DisplayedEntry.PropertyChanged += (s, e) => this.FollowUpRebind();
-        }
-
+    {
         /* WARNING
          * NEVER EVER COPY CODES
          * Even though the resource cost isn't that expensive
@@ -40,6 +20,15 @@ namespace GMD.Views
          * 
          * UNLESS YOU ARE ON A THIGHT DEADLINE
          */
+
+        private DisplayEntry DisplayedEntry = App.CurrentEntry2;
+
+        public DisplayPage_copy()
+        {
+            this.InitializeComponent();            
+            FollowUpRebind();
+            DisplayedEntry.PropertyChanged += (s, e) => this.FollowUpRebind();
+        }       
 
         void FollowUpRebind()
         {
