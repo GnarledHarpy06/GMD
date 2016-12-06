@@ -72,8 +72,7 @@
         <ComboBox x:Name="ThemeComboBox"
                   Grid.Row="3"
                   Grid.Column="1"
-                  Width="175"
-                  SelectionChanged="ThemeComboBox_SelectionChanged">
+                  Width="175">
             <ComboBoxItem Content="Light Theme" />
             <ComboBoxItem Content="Dark Theme" />
             <ComboBoxItem Content="System Setting" />

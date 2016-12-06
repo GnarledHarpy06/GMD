@@ -117,33 +117,36 @@ namespace GMD.ViewModels
 
                     try
                     {
-                        await (await StorageFolder.GetFolderFromPathAsync($@"{ApplicationData.Current.LocalFolder.Path}\{extractionFolder}\res\")).DeleteAsync();
+                        await (await StorageFolder.GetFolderFromPathAsync(
+                            $@"{ApplicationData.Current.LocalFolder.Path}\{extractionFolder}\res\"))
+                            .DeleteAsync();
                     }
-                    catch (FileNotFoundException)
-                    { }
-                    catch (System.Runtime.InteropServices.COMException)
-                    { }
-                    finally
-                    { }
+                    catch (FileNotFoundException) { }
+                    finally { }
                     
                 }
 
                 Dict newDict = new Dict(extractionFolder);
-                await newDict.BuildDictionaryAsync();
-                connection.Insert(newDict, newDict.GetType());
+                try
+                {
+                    await newDict.BuildDictionaryAsync();
 
-                string[] wordStrs = newDict.GetKeywordsFromDictAsync();
-                WordStrDBIndex[] wordStrDBIndexes = new WordStrDBIndex[newDict.WordCount];
+                    string[] wordStrs = newDict.GetKeywordsFromDictAsync();
+                    WordStrDBIndex[] wordStrDBIndexes = new WordStrDBIndex[newDict.WordCount];
 
-                for (int i = 0; i < newDict.WordCount; i++)                
-                    wordStrDBIndexes[i] = new WordStrDBIndex() { WordStr = wordStrs[i], DictId = newDict.DictID };
-                
-                connection.InsertAll(wordStrDBIndexes);                
-                RaiseDictDatabaseChanged("Added");                
+                    for (int i = 0; i < newDict.WordCount; i++)
+                        wordStrDBIndexes[i] = new WordStrDBIndex() { WordStr = wordStrs[i], DictId = newDict.DictID };
+
+                    connection.Insert(newDict, newDict.GetType());
+                    connection.InsertAll(wordStrDBIndexes);
+                    RaiseDictDatabaseChanged("Added");
+                }
+                catch (FileNotFoundException) { }
+                finally { }
             }
-            catch (ArgumentNullException) { }
+            finally { }
 
-        }
+        }        
 
         public async Task RemoveDictAsync(int dictID)
         {

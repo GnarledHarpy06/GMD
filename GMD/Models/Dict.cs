@@ -50,26 +50,12 @@ namespace GMD.Models
 
         public enum idxOffsetBitsEnum
         {
-            Uint32,
-            Uint64
+            Uint32, Uint64
         }
 
         public enum TypeSequenceEnum
         {
-            m,
-            l,
-            g,
-            t,
-            x,
-            y,
-            k,
-            w,
-            h,
-            n,
-            r,
-            W,
-            P,
-            X
+            m, l, g, t, x, y, k, w, h, n, r, W, P, X
         }
 
         public Dict() { }
@@ -79,9 +65,6 @@ namespace GMD.Models
             FolderName = extractionFolder;
             Directory = Path.Combine
                 (ApplicationData.Current.LocalFolder.Path, FolderName);
-#if DEBUG
-            System.Diagnostics.Debug.WriteLine(Directory);
-#endif
         }
 
         public async Task BuildDictionaryAsync()

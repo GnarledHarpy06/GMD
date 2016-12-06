@@ -46,7 +46,15 @@ namespace GMD.Views
         private async void AddDictAppBarButton_Click(object sender, RoutedEventArgs e)
         {
             DictionaryPageProgressRing.IsActive = true;
-            await App.DictsManager.AddDictAsync();
+            try
+            {
+                await App.DictsManager.AddDictAsync();
+            }
+            finally
+            {
+                var dialog = new Windows.UI.Popups.MessageDialog("We couldn't load the dictionary", "Sorry");
+                await dialog.ShowAsync();
+            }
             DictionaryPageProgressRing.IsActive = false;
         }
 

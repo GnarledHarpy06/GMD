@@ -66,10 +66,18 @@ namespace GMD.Models
         public DisplayEntry()
         {
             BookName = "GMD Modular Dictionary";
-            WordStr = "WELCOME MY DEAR";
+            WordStr = "WELCOME";
             Definition = new List<Paragraph>();
             var p = new Paragraph();
-            p.Inlines.Add(new Run { Text = "Start by entering keyword in the text box" });
+            p.Inlines.Add(new Run { Text = 
+                "GMD version 0.0.3a" +
+                "\n" +
+                "This app is made to fullfil a science project research." +
+                "\n" +
+                "Not for commercial purposes" +                
+                "\n" +
+                "Start using this app by adding dictionary in Dictionary Page"
+            });
             Definition.Add(p);
         }
 

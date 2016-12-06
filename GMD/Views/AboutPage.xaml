@@ -61,7 +61,7 @@
         <StackPanel Grid.Row="2"
                     Grid.Column="1"
                     HorizontalAlignment="Left">
-            <TextBlock Text="GMD version 0.0.1a"
+            <TextBlock Text="GMD version 0.0.3a"
                        Margin="0,4,0,0"
                        Style="{StaticResource TitleText}"/>
             <TextBlock Text="Copyright © 2016 Giovan Isa Musthofa"/>
