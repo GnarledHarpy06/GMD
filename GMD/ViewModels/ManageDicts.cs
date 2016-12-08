@@ -4,6 +4,7 @@ using SQLite.Net;
 using SQLite.Net.Platform.WinRT;
 using System;
 using System.IO;
+using System.Linq;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Windows.Storage;
@@ -78,10 +79,6 @@ namespace GMD.ViewModels
                 using (Stream stream = await file.OpenStreamForReadAsync())
                 using (var reader = ReaderFactory.Open(stream))
                 {
-                    var fileName = file.DisplayName;
-                    extractionFolder = fileName.Remove(fileName.LastIndexOf("."),
-                        fileName.Length - fileName.LastIndexOf("."));
-
                     while (reader.MoveToNextEntry())
                     {
                         if (!reader.Entry.IsDirectory)
@@ -94,6 +91,12 @@ namespace GMD.ViewModels
                         }                        
                     }
 
+                    var folders = new DirectoryInfo(ApplicationData.Current.LocalFolder.Path);
+                    extractionFolder = folders.GetDirectories().OrderBy(p => p.CreationTime).LastOrDefault().Name;
+
+                    /* Fix for getting the latest folder created Name                     
+                     */
+
                     if (Directory.Exists($@"{ApplicationData.Current.LocalFolder.Path}\{extractionFolder}\res\"))
                     {
                         try
@@ -103,7 +106,7 @@ namespace GMD.ViewModels
                                 .DeleteAsync();
                         }
                         catch (Exception) { }
-                    }
+                    }                    
                 }
 
                 Dict newDict = new Dict(extractionFolder);
