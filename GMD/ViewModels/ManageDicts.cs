@@ -94,41 +94,42 @@ namespace GMD.ViewModels
                         }                        
                     }
 
-                    try
+                    if (Directory.Exists($@"{ApplicationData.Current.LocalFolder.Path}\{extractionFolder}\res\"))
                     {
-                        await (await StorageFolder.GetFolderFromPathAsync(
-                            $@"{ApplicationData.Current.LocalFolder.Path}\{extractionFolder}\res\"))
-                            .DeleteAsync();
+                        try
+                        {
+                            await (await StorageFolder.GetFolderFromPathAsync(
+                                $@"{ApplicationData.Current.LocalFolder.Path}\{extractionFolder}\res\"))
+                                .DeleteAsync();
+                        }
+                        catch (Exception) { }
                     }
-                    catch (FileNotFoundException) { }
-                    finally { }
-                    
                 }
 
                 Dict newDict = new Dict(extractionFolder);
-                try
-                {
-                    await newDict.BuildDictionaryAsync();
+                await newDict.BuildDictionaryAsync();
+                connection.Insert(newDict, newDict.GetType());
 
-                    string[] wordStrs = newDict.GetKeywordsFromDictAsync();
-                    WordStrDBIndex[] wordStrDBIndexes = new WordStrDBIndex[newDict.WordCount];
+                /* WARNING
+                 * dict object have to inserted into database first
+                 * to make the DictId incrementally unique,
+                 * or otherwise the primary key will always be 0                 
+                 */
 
-                    for (int i = 0; i < newDict.WordCount; i++)
-                        wordStrDBIndexes[i] = new WordStrDBIndex()
-                        {
-                            WordStr = wordStrs[i],
-                            DictId = newDict.DictID
-                        };
+                WordStrDBIndex[] wordStrDBIndexes = new WordStrDBIndex[newDict.WordCount];
+                string[] wordStrs = newDict.GetKeywordsFromDict();
 
-                    connection.Insert(newDict, newDict.GetType());
-                    connection.InsertAll(wordStrDBIndexes);
-                    RaiseDictDatabaseChanged("Added");
-                }
-                catch (FileNotFoundException) { }
-                finally { }
+                for (int i = 0; i < newDict.WordCount; i++)
+                    wordStrDBIndexes[i] = new WordStrDBIndex()
+                    {
+                        WordStr = wordStrs[i],
+                        DictId = newDict.DictID
+                    };
+                
+                connection.InsertAll(wordStrDBIndexes);
+                RaiseDictDatabaseChanged("Added");
             }
-            finally { }
-
+            catch (Exception e) { System.Diagnostics.Debug.WriteLine(e.Message); }
         }        
 
         public async Task RemoveDictAsync(int dictID)

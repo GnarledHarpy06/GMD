@@ -233,7 +233,7 @@ namespace GMD.Models
             }
         }
 
-        public string[] GetKeywordsFromDictAsync()
+        public string[] GetKeywordsFromDict()
         {
             byte[] idxStr = this.GetIdxByteArray();
             string[] arrayOfKeywords = new string[this.WordCount];

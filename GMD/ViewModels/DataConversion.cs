@@ -159,6 +159,34 @@ namespace GMD.ViewModels
          */
         static readonly int[] Empty = new int[0];
 
+        public static int LocateWordStr64(this byte[] self, byte[] candidate)
+        {
+            if (IsEmptyLocate(self, candidate))
+                return -1;
+
+            for (int i = 0; i < self.Length; i++)
+            {
+                if (IsMatch(self, i, candidate) && ((self[i - 13] == 0x00) || i == 0))
+                    return i;
+            }
+
+            return -1;
+        }
+
+        public static int LocateWordStr32(this byte[] self, byte[] candidate)
+        {
+            if (IsEmptyLocate(self, candidate))
+                return -1;
+
+            for (int i = 0; i < self.Length; i++)
+            {
+                if (IsMatch(self, i, candidate) && ((self[i - 9] == 0x00) || i == 0))
+                    return i;
+            }
+
+            return -1;
+        }
+
         public static int Locate(this byte[] self, byte[] candidate)
         {
             if (IsEmptyLocate(self, candidate))

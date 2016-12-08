@@ -38,8 +38,9 @@ namespace GMD.Views
             {
                 await App.DictsManager.AddDictAsync();
             }
-            finally
+            catch (Exception f)
             {
+                System.Diagnostics.Debug.WriteLine(f.Message);
                 var dialog = new Windows.UI.Popups.MessageDialog("We couldn't load the dictionary", "Sorry");
                 await dialog.ShowAsync();
             }

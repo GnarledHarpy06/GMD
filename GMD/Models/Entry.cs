@@ -54,7 +54,7 @@ namespace GMD.Models
             Definition = new List<Paragraph>();
             var p = new Paragraph();
             p.Inlines.Add(new Run { Text = 
-                "GMD version 0.0.3a" +
+                "GMD version 0.0.4a" +
                 "\n" +
                 "This app is made to fullfil a science project research." +
                 "\n" +

@@ -38,7 +38,7 @@ namespace GMD.Views
         private void SearchPage_Loaded(object sender, RoutedEventArgs e)
         {   
             Loaded -= SearchPage_Loaded;
-            App.EntriesManager.ConstructAsync();
+            App.EntriesManager.Construct();
             // tfw best practice :p
             VisualStateManager.GoToState(this, QueryState.Name, true);
             QueryTextBox.Focus(FocusState.Programmatic);
@@ -48,7 +48,8 @@ namespace GMD.Views
 
         private void QueryListView_ItemClick(object sender, ItemClickEventArgs e)
         {
-            displayEntry(App.EntriesManager.GetEntry((WordStrByBookName)e.ClickedItem));            
+            if(e.ClickedItem != QueryListView.SelectedItem)
+                displayEntry(App.EntriesManager.GetEntry((WordStrByBookName)e.ClickedItem));            
         }
 
         private async void RecentEntriesListView_ItemClick(object sender, ItemClickEventArgs e)

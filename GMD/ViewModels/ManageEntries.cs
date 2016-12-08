@@ -26,7 +26,7 @@ namespace GMD.ViewModels
             getDatabaseConnection(); // ConstructorAsync() to delegate constructor method 
         }
 
-        public void ConstructAsync()
+        public void Construct()
         {
             try
             {
@@ -102,8 +102,8 @@ namespace GMD.ViewModels
 
         private void populatearrayOfAllQueriedWordStrsIndexesAsync()
         {
-            var dicts = connection.Table<Dict>().Where(p => p.IsQueried);
-            var wordStrDBIndexes = connection.Table<WordStrDBIndex>().ToArray();
+            TableQuery<Dict> dicts = connection.Table<Dict>().Where(p => p.IsQueried);
+            TableQuery<WordStrDBIndex> wordStrDBIndexes = connection.Table<WordStrDBIndex>();
 
             if(wordStrDBIndexes.Count() < 1)
             {
@@ -116,10 +116,11 @@ namespace GMD.ViewModels
             {
                 try
                 {
-                    string[] wordStrs = wordStrDBIndexes
-                        .Where(p => p.DictId == dict.DictID)
-                        .Select(p => p.WordStr).ToArray();
-                    arrayOfWordStrsIndexes[dict.DictID] = new WordStrsIndex(wordStrs, dict.DictID);
+                    var wordStrs = wordStrDBIndexes
+                        .Where(p => p.DictId == dict.DictID);
+                    var _wordStrs = wordStrs.Select(p => p.WordStr);
+
+                    arrayOfWordStrsIndexes[dict.DictID] = new WordStrsIndex(_wordStrs, dict.DictID);
                 }
                 catch { }                
             }
@@ -130,7 +131,14 @@ namespace GMD.ViewModels
         {
             Dict dict = connection.Table<Dict>().Where(p => p.BookName == word.BookName).FirstOrDefault();
             byte[] wordStrByteArray = DataConversion.GetBytes(word.WordStr + '\0');
-            int offsetwordStr = arrayOfAllQueriedIdxByteArray[dict.DictID].Locate(wordStrByteArray);
+            int offsetwordStr;
+            if (dict.idxOffsetBits == Dict.idxOffsetBitsEnum.Uint64)
+                offsetwordStr = arrayOfAllQueriedIdxByteArray[dict.DictID].LocateWordStr64(wordStrByteArray);
+            else
+                offsetwordStr = arrayOfAllQueriedIdxByteArray[dict.DictID].LocateWordStr32(wordStrByteArray);
+
+            // fix this quickhack later
+
             int wordStrLength = wordStrByteArray.Length - 1;
 
             int offsetOffset = offsetwordStr + wordStrLength + 1;
@@ -196,15 +204,13 @@ namespace GMD.ViewModels
 
         private void getDatabaseConnection()
         {
-            try
-            {
+            if (File.Exists(path))
                 connection = new SQLiteConnection(new SQLitePlatformWinRT(), path);
-            }
-            catch { }
         }
 
         private void updatearrayOfAllQueriedKeywordsAsync()
         {
+            getDatabaseConnection();
             populatearrayOfAllQueriedWordStrsIndexesAsync();
             populatearrayOfAllQueriedIdxByteArray();
         }
@@ -218,9 +224,9 @@ namespace GMD.ViewModels
 
         public WordStrsIndex() { }
 
-        public WordStrsIndex(string[] wordStrs, int dictId)
+        public WordStrsIndex(System.Collections.Generic.IEnumerable<string> wordStrs, int dictId)
         {
-            WordStrs = wordStrs;
+            WordStrs = wordStrs.ToArray();
             DictId = dictId;
         }
 
