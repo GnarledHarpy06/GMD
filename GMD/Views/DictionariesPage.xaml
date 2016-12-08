@@ -108,13 +108,7 @@
                            Text="Dictionary"
                            Margin="8"
                            Style="{StaticResource TitleText}"/>
-            </CommandBar.Content>
-            <AppBarButton x:Name="DownloadAppBarButton"
-                          Icon="Download"
-                          Label="Download"
-                          Click="DownloadAppBarButton_Click">
-            </AppBarButton>
-            <AppBarSeparator />
+            </CommandBar.Content>            
             <AppBarButton Name="AddDictAppBarButton"
                           Icon="Add"
                           Label="Add"
@@ -123,6 +117,12 @@
                           Icon="Delete"
                           Label="Remove"
                           Click="RemoveDictAppBarButton_Click"/>
+            <AppBarSeparator />
+            <AppBarButton x:Name="DownloadAppBarButton"
+                          Icon="Download"
+                          Label="Download"
+                          Click="DownloadAppBarButton_Click">
+            </AppBarButton>
         </CommandBar>
 
         <ListView Name="DictionaryListView"                  
