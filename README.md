@@ -13,7 +13,7 @@ GMD is a dictionary app to query and manages multiple StarDict’s dictionary fi
 * Configure font size
 
 ## Mobile Screenshots
-<div style="display: flex; margin-right: 10px">
+<div style="display: flex; margin: 20px auto;">
     <img src="https://files.catbox.moe/wx6cdy.png" width="300px" height="auto">
     <img src="https://files.catbox.moe/w2suk9.png" width="300px" height="auto">
     <img src="https://files.catbox.moe/iylxe8.png" width="300px" height="auto">
