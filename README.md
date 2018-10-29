@@ -20,6 +20,7 @@ GMD is a dictionary app to query and manages multiple StarDict’s dictionary fi
     <img src="https://files.catbox.moe/w8brc9.png" width="300px" height="auto">
     <img src="https://files.catbox.moe/4tflt2.png" width="300px" height="auto">
 </div>
+
 ## Appxbundle and the certificate
 [GMD_0.0.4.0_x86_arm](https://1drv.ms/u/s!AhCIFQaZi6EZj7oQ4M_nsXbl0Vf0qQ) and the [certificate](https://1drv.ms/u/s!AhCIFQaZi6EZj7oT9W2CqzJT1KZs1w)
 All-in-one Windows 10 PC and Mobile, 4.46 Mb
